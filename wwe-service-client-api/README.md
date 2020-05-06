@@ -32,5 +32,5 @@ url=http://my-web-server/path/sample.html
 
 Click on the following assets :
 
-- [sample.html](./index.html) (custom webpage)
+- [index.html](./index.html) (custom webpage)
 - [wwe-service-client-api.js](./wwe-service-client-api.js) (SCAPI JavaScript client)
