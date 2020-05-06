@@ -1,20 +1,20 @@
 /**
-* WWE Service Client API is being released under the standard MIT License.
-* Copyright (c) 2020 Genesys. All rights reserved.
-*/
+ * WWE Service Client API is being released under the standard MIT License.
+ * Copyright (c) 2020 Genesys. All rights reserved.
+ */
 
 if (!window.genesys) { window.genesys = {}; }
 if (!window.genesys.wwe) { window.genesys.wwe = {}; }
 if (!window.genesys.wwe.service) {
-	/**
-	 * This is the WWE service client API.
-	 * @constructor ServiceClientAPI
-	 */
+  /**
+   * This is the WWE service client API.
+   * @constructor ServiceClientAPI
+   */
   var ServiceClientAPI = function () {
-		/*
-		 * To prevent security issue the argument '*' in the postMessage has to be replaced by the Workspace Web Edition host to avoid a vulnerability issue.
-		 * '*' should be replaced with 'http://<my-wwe-server>'.
-		 */
+    /*
+     * To prevent security issue the argument '*' in the postMessage has to be replaced by the Workspace Web Edition host to avoid a vulnerability issue.
+     * '*' should be replaced with 'http://<my-wwe-server>'.
+     */
     var postMessageOrigin = '*';
 
     var self = this,
@@ -24,9 +24,9 @@ if (!window.genesys.wwe.service) {
 
     // Public members
 
-		/**
-		 * Cleanup the object.
-		 */
+    /**
+     * Cleanup the object.
+     */
     this.unload = function () {
       var requestedEventsClone = requestedEvents.slice(0);
       for (var i = 0; i < requestedEventsClone.length; i++) {
@@ -36,19 +36,20 @@ if (!window.genesys.wwe.service) {
       window.removeEventListener('message', receiveMessage, false);
     };
 
-		/**
-		 * Parse a received command.
-		 * @param {Window} sourceWindow The DOM source window of the message.
-		 * @param {object} message The message to parse.
-		 * @param {string} message.request The request.
-		 * @param {object} [message.referenceId] An optional string pass in the answer event.
-		 * @return {string} A reference identifier in case of a requested value.
-		 */
+    /**
+     * Parse a received command.
+     * @param {Window} sourceWindow The DOM source window of the message.
+     * @param {object} message The message to parse.
+     * @param {string} message.request The request.
+     * @param {object} [message.referenceId] An optional string pass in the answer event.
+     * @return {string} A reference identifier in case of a requested value.
+     */
     this.sendMessage = function (message, successCallback, failedCallback) {
-      if (!message.referenceId) { message.referenceId = '' + currentReferenceId++; }
+      if (!message.referenceId) {
+        message.referenceId = '' + currentReferenceId++;
+      }
       postMessageToParentFrame(message);
       if (successCallback) {
-
         var newEventRequest = {
           referenceId: message.referenceId,
           promiseSuccessCallback: successCallback,
@@ -74,13 +75,13 @@ if (!window.genesys.wwe.service) {
       return message.referenceId;
     };
 
-		/**
-		 * Subscribe to an events.
-		 * @param {string|string[]} event The event name or an array of event name.
-		 * @param {function} callback The callback function called when an event arrive.
-		 * @param {object} [context] An optional context object to call the callback function with.
-		 * @return {object} Itself.
-		 */
+    /**
+     * Subscribe to an events.
+     * @param {string|string[]} event The event name or an array of event name.
+     * @param {function} callback The callback function called when an event arrive.
+     * @param {object} [context] An optional context object to call the callback function with.
+     * @return {object} Itself.
+     */
     this.subscribe = function (event, callback, context) {
       this.sendMessage({
         event: 'subscribe',
@@ -109,12 +110,12 @@ if (!window.genesys.wwe.service) {
       return this;
     };
 
-		/**
-		 * Unsubscribe to an events.
-		 * @param {string} event The event name.
-		 * @param {function} callback The callback function called when an event arrive.
-		 * @return {object} Itself.
-		 */
+    /**
+     * Unsubscribe to an events.
+     * @param {string} event The event name.
+     * @param {function} callback The callback function called when an event arrive.
+     * @return {object} Itself.
+     */
     this.unsubscribe = function (callback) {
       var subscription = subscriptionsByCallback[callback];
       if (subscription) {
@@ -134,10 +135,10 @@ if (!window.genesys.wwe.service) {
       return this;
     };
 
-		/**
-		*
-		* @param {Window} sourceWindow The DOM source IFRAME embendding Workspace Web Edition.
-		*/
+    /**
+     *
+     * @param {Window} sourceWindow The DOM source IFRAME embendding Workspace Web Edition.
+     */
     this.targetWWEWindow = function (window) {
       theWWEWindow = window;
     };
@@ -149,11 +150,11 @@ if (!window.genesys.wwe.service) {
       subscriptionsByCallback = {},
       subscriptionsByEventName = {};
 
-		/**
-		 * Parse a received command.
-		 * @param {object} message The message to parse.
-		 * @private
-		 */
+    /**
+     * Parse a received command.
+     * @param {object} message The message to parse.
+     * @private
+     */
     var postMessageToParentFrame = function (message) {
       message = message || {};
       message.userAgent = 'WWE Client';
@@ -170,12 +171,12 @@ if (!window.genesys.wwe.service) {
       }
     };
 
-		/**
-		 * Remove the internal eventRequest object from the pending requestedEvents list.
-		 * @param {object} eventRequest The internal eventRequest object.
-		 * @return {boolean} true if the eventRequest has been found and removed; false otherwise.
-		 * @private
-		 */
+    /**
+     * Remove the internal eventRequest object from the pending requestedEvents list.
+     * @param {object} eventRequest The internal eventRequest object.
+     * @return {boolean} true if the eventRequest has been found and removed; false otherwise.
+     * @private
+     */
     var removeEventRequest = function (eventRequest) {
       var pos = requestedEvents.indexOf(eventRequest);
       if (pos != -1) {
@@ -189,15 +190,17 @@ if (!window.genesys.wwe.service) {
       return false;
     };
 
-		/**
-		 * Handle global postMessage events.
-		 * @param {object} message The received message event.
-		 * @private
-		 */
+    /**
+     * Handle global postMessage events.
+     * @param {object} message The received message event.
+     * @private
+     */
     var receiveMessage = function (message) {
-      if (message && message.data && message.data.userAgent && message.data.userAgent.indexOf('WWE') != -1) {
+      if (message && message.data && message.data.userAgent && message.data.userAgent.indexOf('WWE') !== -1) {
 
-        if (debug && (typeof JSON !== 'undefined') && JSON.stringify) { console.log('ServiceClientAPI: receiveMessage: ' + JSON.stringify(message.data, null, '\t')); }
+        if (debug && (typeof JSON !== 'undefined') && JSON.stringify) {
+          console.log('ServiceClientAPI: receiveMessage: ' + JSON.stringify(message.data, null, '\t'));
+        }
         if (message.data.event) {
           // We receive a subscribed event
           var subscription = subscriptionsByEventName[message.data.event];
@@ -256,55 +259,95 @@ if (!window.genesys.wwe.service) {
 
   service.auth = {
     getJwtToken: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'auth.getJwtToken' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'auth.getJwtToken'
+      }, successCallback, failedCallback);
     }
   };
 
   service.agent = {
     get: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'agent.get' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'agent.get'
+      }, successCallback, failedCallback);
     },
     getStateList: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'agent.getStateList' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'agent.getStateList'
+      }, successCallback, failedCallback);
     },
     setState: function (stateListIndex, successCallback, failedCallback) {
-      service.sendMessage({ request: 'agent.setState', parameters: [stateListIndex] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'agent.setState',
+        parameters: [stateListIndex]
+      }, successCallback, failedCallback);
     },
     getState: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'agent.getState' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'agent.getState'
+      }, successCallback, failedCallback);
     }
   };
 
   service.interaction = {
     getInteractions: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'interaction.getInteractions' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'interaction.getInteractions'
+      }, successCallback, failedCallback);
     },
     getByInteractionId: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'interaction.getByInteractionId', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'interaction.getByInteractionId',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     },
     setUserData: function (interactionId, keyValues, successCallback, failedCallback) {
-      service.sendMessage({ request: 'interaction.setUserData', parameters: [interactionId, keyValues] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'interaction.setUserData',
+        parameters: [interactionId, keyValues]
+      }, successCallback, failedCallback);
     },
     deleteUserData: function (interactionId, key, successCallback, failedCallback) {
-      service.sendMessage({ request: 'interaction.deleteUserData', parameters: [interactionId, key] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'interaction.deleteUserData',
+        parameters: [interactionId, key]
+      }, successCallback, failedCallback);
     },
     selectCaseByCaseId: function (caseId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'interaction.selectCaseByCaseId', parameters: [caseId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'interaction.selectCaseByCaseId',
+        parameters: [caseId]
+      }, successCallback, failedCallback);
     },
     markdone: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'interaction.markdone', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'interaction.markdone',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     },
     blockMarkdone: function (interactionId, warningMessage, successCallback, failedCallback) {
-      service.sendMessage({ request: 'interaction.blockMarkdone', parameters: [interactionId, warningMessage] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'interaction.blockMarkdone',
+        parameters: [interactionId, warningMessage]
+      }, successCallback, failedCallback);
     },
     unblockMarkdone: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'interaction.unblockMarkdone', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'interaction.unblockMarkdone',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     },
     accept: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'interaction.accept', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'interaction.accept',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     },
     reject: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'interaction.reject', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'interaction.reject',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     }
   };
 
@@ -315,52 +358,91 @@ if (!window.genesys.wwe.service) {
         successCallback = userData;
         userData = null;
       }
-      service.sendMessage({ request: 'voice.dial', parameters: [destination, userData] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'voice.dial',
+        parameters: [destination, userData]
+      }, successCallback, failedCallback);
     },
     answer: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'voice.answer', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'voice.answer',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     },
     hold: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'voice.hold', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'voice.hold',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     },
     resume: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'voice.resume', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'voice.resume',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     },
     hangUp: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'voice.hangUp', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'voice.hangUp',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     },
     startCallRecording: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'voice.startCallRecording', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'voice.startCallRecording',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     },
     stopCallRecording: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'voice.stopCallRecording', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'voice.stopCallRecording',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     },
     pauseCallRecording: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'voice.pauseCallRecording', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'voice.pauseCallRecording',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     },
     resumeCallRecording: function (interactionId, successCallback, failedCallback) {
-      service.sendMessage({ request: 'voice.resumeCallRecording', parameters: [interactionId] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'voice.resumeCallRecording',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
     }
   };
 
   service.sipEndpoint = {
     muteMicrophone: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'sipEndpoint.muteMicrophone' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'sipEndpoint.muteMicrophone'
+      }, successCallback, failedCallback);
     },
     unmuteMicrophone: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'sipEndpoint.unmuteMicrophone' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'sipEndpoint.unmuteMicrophone'
+      }, successCallback, failedCallback);
     },
     muteSpeaker: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'sipEndpoint.muteSpeaker' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'sipEndpoint.muteSpeaker'
+      }, successCallback, failedCallback);
     },
     unmuteSpeaker: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'sipEndpoint.unmuteSpeaker' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'sipEndpoint.unmuteSpeaker'
+      }, successCallback, failedCallback);
     },
     isMicrophoneMute: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'sipEndpoint.isMicrophoneMute' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'sipEndpoint.isMicrophoneMute'
+      }, successCallback, failedCallback);
     },
     isSpeakerMute: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'sipEndpoint.isSpeakerMute' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'sipEndpoint.isSpeakerMute'
+      }, successCallback, failedCallback);
     }
   };
 
@@ -371,43 +453,70 @@ if (!window.genesys.wwe.service) {
         successCallback = userData;
         userData = null;
       }
-      service.sendMessage({ request: 'email.create', parameters: [destination, userData] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'email.create',
+        parameters: [destination, userData]
+      }, successCallback, failedCallback);
     }
   };
 
   service.media = {
     setState: function (mediaName, stateListIndex, successCallback, failedCallback) {
-      service.sendMessage({ request: 'media.setState', parameters: [mediaName, stateListIndex] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'media.setState',
+        parameters: [mediaName, stateListIndex]
+      }, successCallback, failedCallback);
     },
     getMediaList: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'media.getMediaList' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'media.getMediaList'
+      }, successCallback, failedCallback);
     },
     getMediaByName: function (name, successCallback, failedCallback) {
-      service.sendMessage({ request: 'media.getMediaByName', parameters: [name] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'media.getMediaByName',
+        parameters: [name]
+      }, successCallback, failedCallback);
     }
   };
 
   service.system = {
     getAllowedServices: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'system.getAllowedServices' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'system.getAllowedServices'
+      }, successCallback, failedCallback);
     },
     triggerActivity: function (successCallback, failedCallback) {
-      service.sendMessage({ request: 'system.triggerActivity' }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'system.triggerActivity'
+      }, successCallback, failedCallback);
     },
     popupToast: function (parameters, successCallback, failedCallback) {
-      service.sendMessage({ request: 'system.popupToast', parameters: [parameters] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'system.popupToast',
+        parameters: [parameters]
+      }, successCallback, failedCallback);
     },
     updateToast: function (id, parameters, successCallback, failedCallback) {
-      service.sendMessage({ request: 'system.updateToast', parameters: [id, parameters] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'system.updateToast',
+        parameters: [id, parameters]
+      }, successCallback, failedCallback);
     },
     closeToast: function (id, successCallback, failedCallback) {
-      service.sendMessage({ request: 'system.closeToast', parameters: [id] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'system.closeToast',
+        parameters: [id]
+      }, successCallback, failedCallback);
     }
   };
 
   service.configuration = {
     getOption: function (parameters, successCallback, failedCallback) {
-      service.sendMessage({ request: 'configuration.getOption', parameters: [parameters] }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'configuration.getOption',
+        parameters: [parameters]
+      }, successCallback, failedCallback);
     }
   };
 }
