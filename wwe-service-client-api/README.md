@@ -1,6 +1,6 @@
 # WWE Service Client API
 
-Service Client API can be use to customize how your web application or website integrates with Workspace Web Edition. This JavaScript API is based on window.postMessage and provides methods your application can use to communicate cross domain with Workspace Web Edition while maintaining secured isolation.
+Service Client API can be used to customize how your web application or website integrates with Workspace Web Edition. This JavaScript API is based on window.postMessage and provides methods your application can use to communicate cross domain with Workspace Web Edition while maintaining secured isolation.
 
 You can use the Service Client API to perform the following actions:
 
