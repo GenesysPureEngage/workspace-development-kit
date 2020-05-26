@@ -1,6 +1,6 @@
 # WWE Service Client API - API Overview
 
-This sample shows the use of the Workspace Service Client API based on window.postMessage.
+This sample shows the usage of the Workspace Service Client API based on window.postMessage.
 
 The security option "service-client-api.accepted-web-content-origins" must be configured for this sample to work.
 
