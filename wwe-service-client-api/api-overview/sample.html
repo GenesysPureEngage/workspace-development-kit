@@ -171,6 +171,34 @@
           command = 'genesys.wwe.service.email.create("john.doe@gmail.com", succeeded, failed)';
           commandHelp = 'Create a new empty email.';
           break;
+        case 'outbound.getCampaigns':
+          command = 'genesys.wwe.service.outbound.getCampaigns(succeeded, failed)';
+          commandHelp = 'Get details of outbound campaigns';
+          break;
+        case 'outbound.getPreviewRecord':
+          command = 'genesys.wwe.service.outbound.getPreviewRecord("CampaignSIP", succeeded, failed)';
+          commandHelp = 'Request a Pull Preview record from OCS';
+          break;
+        case 'outbound.callPreviewRecord':
+          command = 'genesys.wwe.service.outbound.callPreviewRecord("1", succeeded, failed)';
+          commandHelp = 'Call an Outbound Preview record';
+          break;
+        case 'outbound.rejectPreviewRecord':
+          command = 'genesys.wwe.service.outbound.rejectPreviewRecord("1", succeeded, failed)';
+          commandHelp = 'Reject an Outbound Preview record';
+          break;
+        case 'outbound.cancelPreviewRecord':
+          command = 'genesys.wwe.service.outbound.cancelPreviewRecord("1", succeeded, failed)';
+          commandHelp = 'Cancel an Outbound Preview record';
+          break;
+        case 'outbound.startDirectPushPreview':
+          command = 'genesys.wwe.service.outbound.startDirectPushPreview(succeeded, failed)';
+          commandHelp = 'Start receiving Direct Push Preview records';
+          break;
+        case 'outbound.stopDirectPushPreview':
+          command = 'genesys.wwe.service.outbound.stopDirectPushPreview(succeeded, failed)';
+          commandHelp = 'Stop receiving Direct Push Preview records';
+          break;
         case 'media.getMediaList':
           command = 'genesys.wwe.service.media.getMediaList(succeeded, failed)';
           commandHelp = 'Get the media attributes.';
@@ -193,20 +221,20 @@
           break;
         case 'system.popupToast':
           command = 'genesys.wwe.service.system.popupToast({\n\
-	title: "The title",\n\
-	iconUrl: "https://cdn1.iconfinder.com/data/icons/free-social-media-12/32/RSS_social_media-128.png",\n\
-	subject: "The great subject",\n\
-	message: "The long enough message,\\r\\nwith several lines\\nbut not that much.",\n\
-	keyValues: {\n\
-		"key1": "value one",\n\
-		"key2": "value two",\n\
-		"key3": "value three"\n\
-	},\n\
-	//buttons: [ "Show", "Dismiss" ]\n\
-	buttonShowDismiss: true,\n\
-	autoCloseTimeout: 20000,\n\
-	sendToMyMessage: true\n\
-}, succeeded, failed)';
+            title: "The title",\n\
+            iconUrl: "https://cdn1.iconfinder.com/data/icons/free-social-media-12/32/RSS_social_media-128.png",\n\
+            subject: "The great subject",\n\
+            message: "The long enough message,\\r\\nwith several lines\\nbut not that much.",\n\
+            keyValues: {\n\
+              "key1": "value one",\n\
+              "key2": "value two",\n\
+              "key3": "value three"\n\
+            },\n\
+            //buttons: [ "Show", "Dismiss" ]\n\
+            buttonShowDismiss: true,\n\
+            autoCloseTimeout: 20000,\n\
+            sendToMyMessage: true\n\
+          }, succeeded, failed)';
           commandHelp = 'Popup a customizable toast.';
           break;
         case 'system.updateToast':
@@ -260,6 +288,9 @@
         case 'media':
           log('Received media event: ', JSON.stringify(message, null, '\t'));
           break;
+        case 'outbound':
+          log('Received outbound campaign event: ', JSON.stringify(message, null, '\t'));
+          break;
         case 'system':
           log('Received system event: ', JSON.stringify(message, null, '\t'));
           break;
@@ -273,7 +304,7 @@
       document.getElementById('pageTitle').innerHTML = 'SCAPI on ' + window.location.protocol + '//' + window.location.hostname + port;
 
       // Subscribe to Workspace Web Edition
-      genesys.wwe.service.subscribe(['agent', 'interaction', 'media', 'system', 'markdone'], eventHandler, this);
+      genesys.wwe.service.subscribe(['agent', 'interaction', 'media', 'outbound','system', 'markdone'], eventHandler, this);
 
       document.getElementById('output').innerHTML = ''
     }
@@ -321,6 +352,14 @@
     <button onclick="showCommand('sipEndpoint.unmuteSpeaker')">sipEndpoint.unmuteSpeaker</button>
     <br>
     <button onclick="showCommand('email.create')">email.create</button>
+    <br>
+    <button onclick="showCommand('outbound.getCampaigns')">outbound.getCampaigns</button>
+    <button onclick="showCommand('outbound.getPreviewRecord')">outbound.getPreviewRecord</button>
+    <button onclick="showCommand('outbound.callPreviewRecord')">outbound.callPreviewRecord</button>
+    <button onclick="showCommand('outbound.rejectPreviewRecord')">outbound.rejectPreviewRecord</button>
+    <button onclick="showCommand('outbound.cancelPreviewRecord')">outbound.cancelPreviewRecord</button>
+    <button onclick="showCommand('outbound.startDirectPushPreview')">outbound.startDirectPushPreview</button>
+    <button onclick="showCommand('outbound.stopDirectPushPreview')">outbound.stopDirectPushPreview</button>
     <br>
     <button onclick="showCommand('system.triggerActivity')">system.triggerActivity</button>
     <button onclick="showCommand('system.getAllowedServices')">system.getAllowedServices</button>
