@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Workspace Toolkit - Components</title>
+  <meta charset='utf-8' />
+  <style>
+    /* General */
+    html,
+    body {
+      width: 100%;
+      margin: 0;
+      font-family: Helvetica, Arial, sans-serif;
+      background-color: #fdfdfd;
+    }
+    #workspaceContainer {
+      width: 100%;
+    }
+    #myToolbar {
+      background: #3c474d;
+      height: 45px;
+    }
+    #workspaceVersion {
+      color: #fdfdfd;
+      font-size: 12px;
+      margin-left: 1em;
+    }
+    /* Login containers */
+    #loginInProgressView {
+      position: absolute;
+      left: 200px;
+      top: 200px;
+    }
+    #loginInProgressView input {
+      margin-bottom: 0px;
+    }
+    #myCustomLogout {
+      background: none;
+      color: #FDFDFD;
+      border: 1px solid;
+      margin: 8px 0px 0px 10px;
+      height: 30px;
+      cursor: pointer;
+    }
+    #authSignInBtnContainer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+    .authLogoutBtn {
+      color: #3C474D;
+      cursor: pointer;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+    #setupView {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    div.setup-container {
+      height: 55%;
+      width: 600px;
+      border: 1px solid #77828f;
+      padding: 25px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    div.setup-row {
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      font-weight: 700;
+      line-height: 16px;
+      color: #444a52;
+      width: 300px;
+      margin: 0 auto;
+    }
+    div.setup-row > label {
+      font-size: 14px;
+    }
+    #setupView > div.setup-container > div.auth > select {
+      margin-top: 8px;
+      height: 40px;
+      font-size: 14px;
+      border: 1px solid #77828f;
+      background-color: #f8f8f8;
+      border-radius: 2px;
+      padding: 4px 12px;
+      margin-bottom: 24px;
+    }
+    #setupView > div.setup-container > div.environment > input {
+      margin-top: 8px;
+      height: 40px;
+      font-size: 14px;
+      border: 1px solid #77828f;
+      background-color: #f8f8f8;
+      border-radius: 2px;
+      padding: 4px 12px;
+    }
+    #setupView > div.setup-container > div.submit > button {
+      margin: 24px auto 0 auto;
+      width: 50%;
+      padding: 5px 24px;
+      font-weight: 700;
+      line-height: 1.66666667;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      height: 40px;
+      font-size: 14px;
+      color: #fdfdfd;
+      background: #2a60c8;
+      border-color: #2455a3;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    #setupView > div.setup-container > div.submit > button:hover {
+      box-shadow: 0 0 2px #222529;
+    }
+    #loginInProgressView,
+    #loadingAPIView, #refreshView {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      font-size: 16px;
+      top: calc(40% - 20px);
+      left: 0;
+      right: 0;
+    }
+    #iFrameAuth {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      border: none;
+      justify-content: center;
+      align-items: center;
+    }
+    #iFrameAuthContainer {
+      height: 55%;
+      width: 600px;
+      border: 1px solid #77828f;
+    }
+    #iFrameAuthContainer iframe {
+      height: 100%;
+      width: 100%;
+    }
+    /* UI containers */
+    #myCustomAgentState {
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      width: 200px;
+      height: 33px;
+    }
+    #workspaceDesktop {
+      position: absolute;
+      top: 45px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      padding: 10px;
+      overflow-y: scroll;
+    }
+    #myCustomSystemEventOutput,
+    #myCustomSecondLoginPage,
+    #myCustomAgentChannels,
+    #myCustomCommunicator,
+    #myCustomInteractionBar,
+    #myCustomInteractionContainer,
+    #myCustomToaster,
+    #myCustomCampaignsView,
+    #myCustomPerformanceTrackerView,
+    #myCustomContactCenterStatisticsView,
+    #myCustomWorkbinView,
+    #myCustomHistoryView,
+    #myCustomInteractionsSearchView,
+    #myCustomContactDirectoryView {
+      height: 500px;
+      border: 2px solid darkgray;
+    }
+    #myCustomSystemEventOutput {
+      height: 80px;
+      overflow-y: auto;
+    }
+    #myCustomInteractionBar {
+      min-height: 80px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    #myCustomInteractionContainer {
+      height: 500px;
+    }
+    #myCustomToaster {
+      height: 200px;
+    }
+    #loadingMessage {
+      padding-bottom: 20px;
+    }
+    @keyframes loader-dual-ring {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    .toolkit-loader {
+      display: inline-block;
+      width: 64px;
+      height: 64px;
+    }
+    .toolkit-loader:after {
+      content: " ";
+      display: block;
+      width: 46px;
+      height: 46px;
+      margin: 1px;
+      border-radius: 50%;
+      border: 5px solid #3c474d;
+      border-color: #3c474d transparent #3c474d transparent;
+      animation: loader-dual-ring 1.2s linear infinite;
+    }
+    #shadowDiv {
+      position: absolute;
+      top: 0px;
+      bottom: 0px;
+      left: 0px;
+      right: 0px;
+      z-index: 1100;
+      pointer-events: none;
+      transition: background-color 0.3s;
+    }
+    .shadowDivShadowed {
+      background-color: rgba(0,0,0,0.5);
+      pointer-events: auto;
+    }
+    #dialogDiv {
+      display: none;
+      top: calc(50% - 117px);
+      left: 50%;
+      bottom: auto;
+      border-radius: 0px;
+      width: 436px;
+      margin-left: -220px;
+      background: #FDFDFD;
+      padding: 40px 48px;
+      position: absolute;
+      z-index: 1200;
+    }
+    #dialogDivHeader {
+      box-sizing: border-box;
+      font-size: 12px;
+    }
+    #dialogDivTitle {
+      font-size: 24px;
+      font-weight: 300;
+      line-height: 1;
+      height: auto;
+      background: none;
+      display: inline-block;
+      color: #3C474D;
+    }
+    #dialogDivContent {
+      margin: 35px 0px 0px 0px;
+      position: relative;
+    }
+    #dialogDivMessage {
+      width: 100%;
+      min-height: inherit;
+      margin-bottom: inherit;
+    }
+    #dialogDivButton {
+      margin-top: 24px;
+      height: 40px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
+      float: right;
+    }
+    #dialogDivOk {
+      border-color: #2455A3;
+      background-color: #2A60C8;
+      color: #FDFDFD;
+      min-width: 50px;
+      padding: 10px;
+    }
+  </style>
+
+  <script>
+    // The authentication mode can be either "pop" with a login in an external window,
+    // or "iframes" with the login inside an embedded iframe.
+    var AUTH_MODE = 'pop'; // "pop" or "iframe"
+    var ENV_URL = 'https://localhost:7777/ui/wwe/api.js';
+
+    var isLoggingIn = false;
+
+    var loginView, agentStateView, myChannelsView, communicatorView, interactionBarView, toasterView,
+      myHistoryView, interactionsSearchView, contactDirectoryView,
+      workbinView, myCampaignsView,
+      performanceTrackerView, contactCenterStatisticsView;
+
+    window.onGenesysAPIReady = function () {
+      showComponents("block", "none", "none", "none", "none", "none");
+      isLoggingIn = true;
+      // Log the agent in
+      window.genesys.wwe.Auth.login({
+        target: AUTH_MODE === 'pop' ? "authSignInBtnContainer" : 'iFrameAuthContainer',
+        createNode: true,
+        authMode: AUTH_MODE
+      }, function () {
+          // Login succeed
+
+          // Here the workspace is loaded and you are correctly logged in
+          showComponents("none", "none", "none", "block", "none", "none");
+
+          // Subscribe to the system events
+          genesys.wwe.systemEvent.on("error serviceAvailability realtimeConnection outboundNotification", onSystemEvents);
+
+          // Subscribe to the inactivity manager events
+          genesys.wwe.inactivityManager.on('active', onInactivityManagerEventActive);
+          genesys.wwe.inactivityManager.on('inactiveAlert', onInactivityManagerEventInactiveAlert);
+          genesys.wwe.inactivityManager.on('inactiveCountDown', onInactivityManagerEventInactiveCountDown);
+          genesys.wwe.inactivityManager.on('inactiveComplete', onInactivityManagerEventInactiveComplete);
+
+          // Listen to 'frameState' change  event
+          genesys.wwe.system.on('change:frameState', onFrameStateChange);
+
+          // We instantiate the Second Login View
+          loginView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomSecondLoginPage"), genesys.wwe.Main.LoginView);
+          // Try to login to know if we need this second login view
+          loginView.loginSecondStep(function (data) {
+            switch (data.result) {
+              case "showAdditionalLogin":
+                // The configuration says that we need to show the second login view.
+                // So we show the content of second login view
+                // and wait for the async result in this callback ("loggedIn" or "loginFailedTryAgain")
+                document.getElementById("myCustomSecondLoginPage").style.backgroundColor = "blue";
+                break;
+              case "noNeedAdditionalLogin":
+                // No need to show the second login view
+                document.getElementById("myCustomSecondLoginPage").style.backgroundColor = "yellow";
+                break;
+              case "loginFailedTryAgain":
+                // Cliking on the button Continue failed, try again to click on "Continue" with different parameters!
+                document.getElementById("myCustomSecondLoginPage").style.backgroundColor = "red";
+                break;
+              case "loggedIn":
+                // We are fully logged in
+                document.getElementById("myCustomSecondLoginPage").style.backgroundColor = "green";
+                break;
+            }
+          });
+
+          // We instantiate the Agent State View
+          agentStateView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomAgentState"), genesys.wwe.Main.AgentStateView, {
+            alignLeft: false // true to align the drop-down menu and the tooltip at the left side of the component; false, the default (align to the right), otherwise.
+          });
+
+          // We instantiate the My Channels View
+          myChannelsView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomAgentChannels"), genesys.wwe.Main.MyChannelsView);
+
+          // We instantiate the Team Communicator View
+          communicatorView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomCommunicator"), genesys.wwe.Main.CommunicatorView);
+
+          // We instantiate the Interaction Bar View and we indicate the CSS selector to target a container which will contain all the interaction content.
+          interactionBarView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomInteractionBar"), genesys.wwe.Main.InteractionBarView, {
+            pinnedCaseSelector: "#myCustomInteractionContainer", // The CSS selector to target a container which will contain all the interaction content.
+            //canCollapse: false // Allow to collapse the case.
+          });
+          // Subscribe to the caseEvent events
+          interactionBarView.on("caseEvent", function (e) {
+            console.log('InteractionBarView.caseEvent eventType: "' + e.eventType + '", caseId: "' + e.caseId + '"');
+          });
+          // Subscribe to the interactionEvent events
+          interactionBarView.on("interactionEvent", function (e) {
+            console.log('InteractionBarView.interactionEvent eventType: "' + e.eventType + '", interaction: ' + JSON.stringify(e.interaction, null, '\t'));
+          });
+
+          // We instantiate the Toaster View to receive the interaction notification.
+          toasterView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomToaster"), genesys.wwe.Main.ToasterView);
+
+          if(genesys.wwe.Contact) {
+
+            // We instantiate the History View
+            myHistoryView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomHistoryView"), genesys.wwe.Contact.MyHistoryView);
+
+            // We instantiate the Interactions Search View
+            interactionsSearchView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomInteractionsSearchView"), genesys.wwe.Contact.InteractionsSearchView);
+
+            // We instantiate the Contact Directory View
+            contactDirectoryView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomContactDirectoryView"), genesys.wwe.Contact.ContactDirectoryView);
+
+          }
+
+          if(genesys.wwe.OpenMedia) {
+
+            // We instantiate the Workbin View
+            workbinView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomWorkbinView"), genesys.wwe.OpenMedia.WorkbinView);
+
+          }
+
+          if(genesys.wwe.Outbound) {
+
+            // We instantiate the Workbin View
+            myCampaignsView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomCampaignsView"), genesys.wwe.Outbound.MyCampaignsView);
+
+          }
+
+          if(genesys.wwe.Reporting) {
+
+            // We instantiate the Performance Tracker View
+            performanceTrackerView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomPerformanceTrackerView"), genesys.wwe.Reporting.PerformanceTrackerView);
+
+            // We instantiate the Contact Center Statistics View
+            contactCenterStatisticsView = genesys.wwe.viewManager.addViewDynamically(document.getElementById("myCustomContactCenterStatisticsView"), genesys.wwe.Reporting.ContactCenterStatisticsView);
+
+          }
+
+          //Add some code to update some chain of commands
+          insertCommand('InteractionVoiceClose', 'SaveComment', 'CheckMandatoryActionsBeforeClose', checkBeforeClose);
+          insertCommand('MediaVoiceMakeCall','IsItPossibleCallerId', 'CheckDialedNumber', checkDialedNumber);
+
+          getWorkspaceVersion();
+
+          document.getElementById('dialogDivOk').addEventListener("click", hideDialog);
+        },
+        function (data) {
+          // Login failed
+          console.log('Login Failed');
+          if (data && data.errorType && data.errorMessage) {
+            showComponents("none", "flex", "none", "none", "none", "none");
+          } else {
+            showComponents("none", "flex", "none", "none", "none", "none");
+            console.log(data);
+          }
+        },
+        function (progressType, message, allowLogout) {
+          // Login progress status
+          console.log("Login progress: " + progressType);
+          switch (progressType) {
+            case "authenticationStarted":
+              // When the authentication has been prompted to the user
+              if (AUTH_MODE === 'iframe') {
+                showComponents("none", "flex", "none", "none", "none", "none");
+              } else {
+                showComponents("none", "none", "block", "none", "block", "none");
+                // Remove iframe container if it exists
+                var authIframe = document.getElementById("iFrameAuthContainer");
+                if (authIframe) {
+                  authIframe.parentNode.removeChild(authIframe);
+                }
+              }
+              break;
+            case "authenticationEnded":
+              // When the authentication is completed
+              isLoggingIn = false;
+              showComponents("block", "none", "none", "none", "none", "none");
+              break;
+            case "authenticationPopupClosed":
+              // When the authentication popup has been closed without been authenticated
+              break;
+            case "authenticationNotNeeded":
+              // When the authentication is not needed because the user is already authenticated
+              break;
+            case "initializationFailed":
+              if (isLoggingIn) {
+                // When something is wrong with Workspace initialization
+                console.log("Initialization failed: " + message);
+                document.getElementById("authSignInBtnContainer").addEventListener("click", function () {
+                  showComponents("none", "none", "block", "none", "block", "none");
+                });
+                showComponents("none", "flex", "none", "none", "none", "none");
+              }
+              break;
+            case "popupOpened":
+              showComponents("none", "none", "block", "none", "none", "none");
+              break;
+            default:
+              break;
+          }
+        }
+      );
+
+    };
+
+    function authLogout () {
+      // And we log the agent out
+      genesys.wwe.Auth.logout(function () {
+        // Successfully logout
+      }, function (error) {
+        alert('Error while logging out: ' + error);
+      });
+    }
+
+    function logout() {
+      // And we log the agent out
+      genesys.wwe.Auth.logout(function () {
+        // Successfully logout
+
+        // We remove all the views
+        genesys.wwe.viewManager.removeViewDynamically(loginView);
+
+        genesys.wwe.viewManager.removeViewDynamically(agentStateView);
+
+        genesys.wwe.viewManager.removeViewDynamically(myChannelsView);
+
+        genesys.wwe.viewManager.removeViewDynamically(communicatorView);
+
+        interactionBarView.off("caseEvent"); // Unsubscribe the events before removing the view
+        genesys.wwe.viewManager.removeViewDynamically(interactionBarView);
+
+        genesys.wwe.viewManager.removeViewDynamically(toasterView);
+
+        genesys.wwe.viewManager.removeViewDynamically(myHistoryView);
+
+        genesys.wwe.viewManager.removeViewDynamically(interactionsSearchView);
+
+        genesys.wwe.viewManager.removeViewDynamically(contactDirectoryView);
+
+        genesys.wwe.viewManager.removeViewDynamically(workbinView);
+
+        genesys.wwe.viewManager.removeViewDynamically(myCampaignsView);
+
+        genesys.wwe.viewManager.removeViewDynamically(performanceTrackerView);
+
+        genesys.wwe.viewManager.removeViewDynamically(contactCenterStatisticsView);
+
+
+        genesys.wwe.systemEvent.off("error serviceAvailability realtimeConnection outboundNotification", onSystemEvents);
+        genesys.wwe.inactivityManager.off('active', onInactivityManagerEventActive);
+        genesys.wwe.inactivityManager.off('inactiveAlert', onInactivityManagerEventInactiveAlert);
+        genesys.wwe.inactivityManager.off('inactiveCountDown', onInactivityManagerEventInactiveCountDown);
+        genesys.wwe.inactivityManager.off('inactiveComplete', onInactivityManagerEventInactiveComplete);
+        genesys.wwe.system.off('change', onFrameStateChange);
+
+        showComponents("none", "none", "none", "none", "none", "block");
+      }, function (error) {
+        // Failed to logout (An interaction is still active, the agent has refused to logout at the prompt,
+        // the end session failed, or the end authentication failed).
+        alert("Error while logging out: " + error);
+      });
+    }
+
+    // Function to display correct area of the ui
+    function showComponents (apiLoading, login, loginInProgress, app, showSetup, shouldRefresh) {
+      document.getElementById("workspaceContainer").style.display = app;
+      document.getElementById("loadingAPIView").style.display = apiLoading;
+      if (AUTH_MODE === 'iframe') {
+        document.getElementById("iFrameAuth").style.display = login;
+      } else {
+        document.getElementById("authSignInBtnContainer").style.display = login;
+      }
+      document.getElementById("loginInProgressView").style.display = loginInProgress;
+      document.getElementById("setupView").style.display = showSetup;
+      document.getElementById("refreshView").style.display = shouldRefresh;
+    }
+
+    function onSystemEvents(systemEvent) {
+      var evt = JSON.stringify(systemEvent, null, '\t');
+      var divOutput = document.getElementById("myCustomSystemEventOutput");
+      divOutput.innerHTML = "<pre>" + evt + "</pre>" + divOutput.innerHTML;
+    }
+
+    /**
+     * Called on a "active" event.
+     * @param {string} [reason] The reason of this event.
+     */
+    function onInactivityManagerEventActive(reason) {
+      console.log('onInactivityManagerEventActive(reason: "' + reason + '")');
+    }
+
+    /**
+     * Called on a "inactiveAlert" event.
+     * @param {string} [reason] The reason of this event.
+     * @param {number} [remainingTime] The counter.
+     */
+    function onInactivityManagerEventInactiveAlert(reason, remainingTime) {
+      console.log('onInactivityManagerEventInactiveAlert(reason: "' + reason + '", remainingTime: ' + remainingTime + ')');
+    }
+
+    /**
+     * Called on a "inactiveAlert" event.
+     * @param {number} [remainingTime] The counter.
+     */
+    function onInactivityManagerEventInactiveCountDown(remainingTime) {
+      console.log('onInactivityManagerEventInactiveCountDown(remainingTime: ' + remainingTime + ')');
+    }
+
+    /**
+     * Called on a "inactiveComplete" event.
+     * @param {string} [reason] The reason of this event.
+     */
+    function onInactivityManagerEventInactiveComplete(reason) {
+      console.log('onInactivityManagerEventInactiveComplete(reason: "' + reason + '")');
+    }
+
+    // Utility function to check for frameState changed, and display a log in traces
+    function onFrameStateChange() {
+      if (genesys.wwe.system) {
+        var isFrameLeading =  genesys.wwe.system.isFrameLeading();
+        var isFrameFollowing =  genesys.wwe.system.isFrameFollowing();
+        var isFrameNegotiating =  genesys.wwe.system.isFrameNegotiating();
+        var currentFrameState =  genesys.wwe.system.get('frameState');
+        console.log('WWE FrameState changed:' + currentFrameState + ', isFrameLeading:' + isFrameLeading + ', isFrameFollowing:' + isFrameFollowing + ', isFrameNegotiating:' + isFrameNegotiating);
+      }
+    }
+
+    function insertCommand(commandName, subCommandName, newCommandName, callback) {
+      genesys.wwe.commandManager.insertBefore(commandName, subCommandName,
+        genesys.wwe.Main.ChainOfCommand.extend({
+          name: newCommandName,
+            onExecute: function(context) {
+              return callback(context);
+          }
+        })
+      );
+    }
+
+    function getWorkspaceVersion () {
+      genesys.wwe.requestManager.get({
+        name: 'get_workspace_version',
+        url: '/info'
+      })
+        .then((info) => {
+          const label = document.getElementById('workspaceVersion');
+          label.innerText = 'WWE v' + info.version;
+        });
+    }
+    
+    function checkBeforeClose() {
+      if (!document.getElementById('mandatoryCheckbox').checked) {
+        showDialog('Mandatory Items on close','The checkbox below the interactionBar should be checked to be able to close the interaction.');
+        return true;
+      }
+      return false;
+    }
+
+    function checkDialedNumber(context) {
+      var regExpPhoneNumber = new RegExp('^\\+33')
+      if (!regExpPhoneNumber.test(context.destination)) {
+        showDialog('Impossible to call', 'Only phone numbers starting with +33 could be dialed');
+        return true;
+      }
+      return false;
+    }
+
+    function showDialog(title, message) {
+      document.getElementById('shadowDiv').classList.add('shadowDivShadowed');
+      document.getElementById('dialogDivTitle').innerHTML = title;
+      document.getElementById('dialogDivMessage').innerHTML = message;
+      document.getElementById('dialogDiv').style.display = 'block';
+    }
+
+    function hideDialog() {
+      document.getElementById('shadowDiv').classList.remove('shadowDivShadowed');
+      document.getElementById('dialogDiv').style.display = 'none';
+    }
+  </script>
+</head>
+
+<body>
+  <div id="setupView">
+    <div class="setup-container">
+      <div class="auth setup-row">
+        <label><b>Auth Mode:</b></label>
+        <select id="auth-mode">
+          <option value="iframe">Iframe</option>
+          <option value="pop">Popup</option>
+        </select>
+      </div>
+      <div class="environment setup-row">
+        <label><b>Environment URL:</b></label>
+        <input id="environment-url" placeholder="i.e: https://localhost:7777/ui/wwe/api.js" value="https://localhost:7777/ui/wwe/api.js"></input>
+      </div>
+      <div class="submit setup-row">
+        <button id="start-btn">Start</button>
+      </div>
+    </div>
+  </div>
+  <div id="refreshView" style="display: none">
+    Logout succeeded.
+    <br>
+    Please refresh the page to log back in.
+  </div>
+  <div id="loadingAPIView" style="display: none">
+    <div id="loadingMessage">Loading the API, please wait...</div>
+    <div class="toolkit-loader"></div>
+  </div>
+  <div id="loginInProgressView" style="display: none">
+    Waiting for Authentication.
+    <br>
+    Please fill your credentials...
+  </div>
+  <div id="iFrameAuth" style="display: none">
+    <div id="iFrameAuthContainer"></div>
+  </div>
+  <div id="authSignInBtnContainer" class="btn-container" style="display: none"></div>
+  <div id='shadowDiv'></div>
+  <div id="dialogDiv">
+    <div id="dialogDivHeader">
+      <span id='dialogDivTitle'></span>
+    </div>
+    <div id="dialogDivContent">
+      <div id="dialogDivMessage"></div>
+      <div id="dialogDivButton">
+        <button id="dialogDivOk">Ok</button>
+      </div>
+    </div>
+  </div>
+  <div id="workspaceContainer" style="display: none">
+    <div id="myToolbar">
+      <button id="myCustomLogout" onclick="logout()" title='logout'>Logout</button>
+      <label id="workspaceVersion"></label>
+      <div id="myCustomAgentState"></div>
+    </div>
+
+    <div id="workspaceDesktop">
+      <h2>Event Output</h2>
+      <div id="myCustomSystemEventOutput"></div>
+
+      <h2>Second Login</h2>
+      <div id="myCustomSecondLoginPage"></div>
+
+      <h2>Agent Channels</h2>
+      <div id="myCustomAgentChannels"></div>
+
+      <h2>Communicator</h2>
+      <button id="myCustomCommunicatorFocusButton" onclick="communicatorView.focus();">Focus Communicator</button>
+      <div id="myCustomCommunicator"></div>
+
+      <h2>Interaction Bar</h2>
+      <div id="myCustomInteractionBar"></div>
+
+      Check this item to be able to close the voice interaction <input type="checkbox" id="mandatoryCheckbox">
+
+      <h2>Interaction Container</h2>
+      <div id="myCustomInteractionContainer"></div>
+
+      <h2>Toaster</h2>
+      <div id="myCustomToaster"></div>
+
+      <h2>Campaigns</h2>
+      <div id="myCustomCampaignsView"></div>
+
+      <h2>Performance Tracker</h2>
+      <div id="myCustomPerformanceTrackerView"></div>
+
+      <h2>Contact Center Statistics</h2>
+      <div id="myCustomContactCenterStatisticsView"></div>
+
+      <h2>Workbins</h2>
+      <div id="myCustomWorkbinView"></div>
+
+      <h2>My History</h2>
+      <div id="myCustomHistoryView"></div>
+
+      <h2>Interactions Search</h2>
+      <div id="myCustomInteractionsSearchView"></div>
+
+      <h2>Contact Directory</h2>
+      <div id="myCustomContactDirectoryView"></div>
+
+    </div>
+
+  </div>
+  <!-- Load the Genesys Workspace Toolkit API and specify the callback -->
+  <!-- The API could be in another domain (CORS) -->
+  <!-- <script id="genesys-toolkit-script" data-genesys-api-callback="onGenesysAPIReady" src="ENV_URL" charset="UTF-8"></script> -->
+  <script>
+    const lastAuthMode = window.localStorage.getItem('toolkit.sample.auth-mode') || 'pop';
+    const lastEnvironmentUrl = window.localStorage.getItem('toolkit.sample.env-url') || 'https://localhost:7777/ui/wwe/api.js';
+    
+    var authModeSelect = document.getElementById('auth-mode');
+    var environmentUrlInput = document.getElementById('environment-url');
+    var startButton = document.getElementById('start-btn');
+    var toolkitScript = document.getElementById('genesys-toolkit-script');
+
+    authModeSelect.value = lastAuthMode;
+    environmentUrlInput.value = lastEnvironmentUrl;
+
+    authModeSelect.addEventListener('change', function () {
+      window.localStorage.setItem('toolkit.sample.auth-mode', authModeSelect.value);
+    });
+    environmentUrlInput.addEventListener('input', function () {
+      window.localStorage.setItem('toolkit.sample.env-url', environmentUrlInput.value);
+    });
+    startButton.addEventListener('click', function () {
+      AUTH_MODE = authModeSelect.value;
+      ENV_URL = environmentUrlInput.value;
+      appendToolkitScript();
+    });
+    
+    function appendToolkitScript () {
+      if (toolkitScript) {
+        toolkitScript.parentNode.removeChild(toolkitScript);
+        toolkitScript = null;
+      }
+      toolkitScript = document.createElement('script');
+      toolkitScript.setAttribute('id', 'genesys-toolkit-script');
+      toolkitScript.setAttribute('data-genesys-api-callback', 'onGenesysAPIReady');
+      toolkitScript.setAttribute('charset', 'UTF-8');
+      toolkitScript.setAttribute('src', ENV_URL);
+      document.head.appendChild(toolkitScript);
+    }
+  </script>
+</body>
+
+</html>
