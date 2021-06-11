@@ -310,6 +310,7 @@
       workbinView, myCampaignsView,
       performanceTrackerView, contactCenterStatisticsView;
 
+    // Called when the toolkit api has been loaded
     window.onGenesysAPIReady = function () {
       showComponents("block", "none", "none", "none", "none", "none");
       isLoggingIn = true;
@@ -431,6 +432,7 @@
           insertCommand('InteractionVoiceClose', 'SaveComment', 'CheckMandatoryActionsBeforeClose', checkBeforeClose);
           insertCommand('MediaVoiceMakeCall','IsItPossibleCallerId', 'CheckDialedNumber', checkDialedNumber);
 
+          // Gets the workspace version
           getWorkspaceVersion();
 
           document.getElementById('dialogDivOk').addEventListener("click", hideDialog);
@@ -491,18 +493,9 @@
           }
         }
       );
-
     };
 
-    function authLogout () {
-      // And we log the agent out
-      genesys.wwe.Auth.logout(function () {
-        // Successfully logout
-      }, function (error) {
-        alert('Error while logging out: ' + error);
-      });
-    }
-
+    // Logs the agent out, remove views, and remove listeners
     function logout() {
       // And we log the agent out
       genesys.wwe.Auth.logout(function () {
@@ -566,6 +559,7 @@
       document.getElementById("refreshView").style.display = shouldRefresh;
     }
 
+    // System event handler
     function onSystemEvents(systemEvent) {
       var evt = JSON.stringify(systemEvent, null, '\t');
       var divOutput = document.getElementById("myCustomSystemEventOutput");
@@ -616,6 +610,7 @@
       }
     }
 
+    // Inserts a command before another one in a chain
     function insertCommand(commandName, subCommandName, newCommandName, callback) {
       genesys.wwe.commandManager.insertBefore(commandName, subCommandName,
         genesys.wwe.Main.ChainOfCommand.extend({
@@ -627,6 +622,7 @@
       );
     }
 
+    // Gets the workspace version, and displays it on the toolbar
     function getWorkspaceVersion () {
       genesys.wwe.requestManager.get({
         name: 'get_workspace_version',
@@ -638,6 +634,7 @@
         });
     }
     
+    // Command called before closing an interaction
     function checkBeforeClose() {
       if (!document.getElementById('mandatoryCheckbox').checked) {
         showDialog('Mandatory Items on close','The checkbox below the interactionBar should be checked to be able to close the interaction.');
@@ -646,6 +643,7 @@
       return false;
     }
 
+    // Command called before making a call
     function checkDialedNumber(context) {
       var regExpPhoneNumber = new RegExp('^\\+33')
       if (!regExpPhoneNumber.test(context.destination)) {
@@ -655,13 +653,14 @@
       return false;
     }
 
+    // Utility to show a dialog
     function showDialog(title, message) {
       document.getElementById('shadowDiv').classList.add('shadowDivShadowed');
       document.getElementById('dialogDivTitle').innerHTML = title;
       document.getElementById('dialogDivMessage').innerHTML = message;
       document.getElementById('dialogDiv').style.display = 'block';
     }
-
+    // Utility to hide a dialog
     function hideDialog() {
       document.getElementById('shadowDiv').classList.remove('shadowDivShadowed');
       document.getElementById('dialogDiv').style.display = 'none';
@@ -801,6 +800,7 @@
       appendToolkitScript();
     });
     
+    // Adds the toolkit script dynamically, in order to support environment URL via input
     function appendToolkitScript () {
       if (toolkitScript) {
         toolkitScript.parentNode.removeChild(toolkitScript);
