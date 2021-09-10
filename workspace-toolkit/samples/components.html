@@ -24,15 +24,6 @@
       font-size: 12px;
       margin-left: 1em;
     }
-    /* Login containers */
-    #loginInProgressView {
-      position: absolute;
-      left: 200px;
-      top: 200px;
-    }
-    #loginInProgressView input {
-      margin-bottom: 0px;
-    }
     #myCustomLogout {
       background: none;
       color: #FDFDFD;
@@ -42,7 +33,7 @@
       cursor: pointer;
     }
     #authSignInBtnContainer {
-      position: absolute;
+      position: fixed;
       width: 100%;
       height: 100%;
       justify-content: center;
@@ -54,8 +45,18 @@
       text-decoration: underline;
       font-weight: bold;
     }
+    #errorView {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
     #setupView {
-      position: absolute;
+      position: fixed;
       width: 100%;
       height: 100%;
       z-index: 1;
@@ -105,16 +106,13 @@
       border-radius: 2px;
       padding: 4px 12px;
     }
-    #setupView > div.setup-container > div.submit > button {
-      margin: 24px auto 0 auto;
-      width: 50%;
+    button.gux-primary {
       padding: 5px 24px;
       font-weight: 700;
-      line-height: 1.66666667;
       text-align: center;
       white-space: nowrap;
       vertical-align: middle;
-      height: 40px;
+      height: 32px;
       font-size: 14px;
       color: #fdfdfd;
       background: #2a60c8;
@@ -123,12 +121,19 @@
       border-radius: 2px;
       cursor: pointer;
     }
-    #setupView > div.setup-container > div.submit > button:hover {
+    button.gux-primary:hover {
       box-shadow: 0 0 2px #222529;
+    }
+    #setupView > div.setup-container > div.submit {
+      margin-top: 10px;
+      align-items: center;
+    }
+    #setupView > div.setup-container > div.submit > button {
+      width: 50%;
     }
     #loginInProgressView,
     #loadingAPIView, #refreshView {
-      position: absolute;
+      position: fixed;
       width: 100%;
       text-align: center;
       font-size: 16px;
@@ -137,7 +142,7 @@
       right: 0;
     }
     #iFrameAuth {
-      position: absolute;
+      position: fixed;
       height: 100%;
       width: 100%;
       border: none;
@@ -312,7 +317,7 @@
 
     // Called when the toolkit api has been loaded
     window.onGenesysAPIReady = function () {
-      showComponents("block", "none", "none", "none", "none", "none");
+      showComponents("block", "none", "none", "none", "none", "none", "none");
       isLoggingIn = true;
       // Log the agent in
       window.genesys.wwe.Auth.login({
@@ -323,7 +328,7 @@
           // Login succeed
 
           // Here the workspace is loaded and you are correctly logged in
-          showComponents("none", "none", "none", "block", "none", "none");
+          showComponents("none", "none", "none", "block", "none", "none", "none");
 
           // Subscribe to the system events
           genesys.wwe.systemEvent.on("error serviceAvailability realtimeConnection outboundNotification", onSystemEvents);
@@ -441,9 +446,11 @@
           // Login failed
           console.log('Login Failed');
           if (data && data.errorType && data.errorMessage) {
-            showComponents("none", "flex", "none", "none", "none", "none");
+            var displayedMessage = 'Login failed : ' + data.errorMessage + '<br><br>';
+            document.getElementById("error-message").innerHTML = displayedMessage;
+            showComponents("none", "flex", "none", "none", "none", "none", "flex");
           } else {
-            showComponents("none", "flex", "none", "none", "none", "none");
+            showComponents("none", "flex", "none", "none", "none", "none", "none");
             console.log(data);
           }
         },
@@ -454,9 +461,9 @@
             case "authenticationStarted":
               // When the authentication has been prompted to the user
               if (AUTH_MODE === 'iframe') {
-                showComponents("none", "flex", "none", "none", "none", "none");
+                showComponents("none", "flex", "none", "none", "none", "none", "none");
               } else {
-                showComponents("none", "none", "block", "none", "block", "none");
+                showComponents("none", "none", "block", "none", "none", "none", "none");
                 // Remove iframe container if it exists
                 var authIframe = document.getElementById("iFrameAuthContainer");
                 if (authIframe) {
@@ -467,7 +474,7 @@
             case "authenticationEnded":
               // When the authentication is completed
               isLoggingIn = false;
-              showComponents("block", "none", "none", "none", "none", "none");
+              showComponents("block", "none", "none", "none", "none", "none", "none");
               break;
             case "authenticationPopupClosed":
               // When the authentication popup has been closed without been authenticated
@@ -476,17 +483,17 @@
               // When the authentication is not needed because the user is already authenticated
               break;
             case "initializationFailed":
-              if (isLoggingIn) {
-                // When something is wrong with Workspace initialization
-                console.log("Initialization failed: " + message);
-                document.getElementById("authSignInBtnContainer").addEventListener("click", function () {
-                  showComponents("none", "none", "block", "none", "block", "none");
-                });
-                showComponents("none", "flex", "none", "none", "none", "none");
-              }
+              // When something is wrong with Workspace initialization
+              console.log("Initialization failed: " + message);
+              var displayedMessage = 'Initialization failed : ' + message + '<br>';
+              document.getElementById("error-message").innerHTML = displayedMessage;
+              document.getElementById("authSignInBtnContainer").addEventListener("click", function () {
+                showComponents("none", "none", "block", "none", "none", "none", "none");
+              });
+              showComponents("none", "flex", "none", "none", "none", "none", "flex");
               break;
             case "popupOpened":
-              showComponents("none", "none", "block", "none", "none", "none");
+              showComponents("none", "none", "block", "none", "none", "none", "none");
               break;
             default:
               break;
@@ -537,7 +544,7 @@
         genesys.wwe.inactivityManager.off('inactiveComplete', onInactivityManagerEventInactiveComplete);
         genesys.wwe.system.off('change', onFrameStateChange);
 
-        showComponents("none", "none", "none", "none", "none", "block");
+        showComponents("none", "none", "none", "none", "none", "block", "none");
       }, function (error) {
         // Failed to logout (An interaction is still active, the agent has refused to logout at the prompt,
         // the end session failed, or the end authentication failed).
@@ -546,7 +553,7 @@
     }
 
     // Function to display correct area of the ui
-    function showComponents (apiLoading, login, loginInProgress, app, showSetup, shouldRefresh) {
+    function showComponents (apiLoading, login, loginInProgress, app, showSetup, shouldRefresh, showError) {
       document.getElementById("workspaceContainer").style.display = app;
       document.getElementById("loadingAPIView").style.display = apiLoading;
       if (AUTH_MODE === 'iframe') {
@@ -557,6 +564,16 @@
       document.getElementById("loginInProgressView").style.display = loginInProgress;
       document.getElementById("setupView").style.display = showSetup;
       document.getElementById("refreshView").style.display = shouldRefresh;
+      document.getElementById("errorView").style.display = showError;
+    }
+
+    function authLogout () {
+      genesys.wwe.Auth.logout(function () {
+        showComponents("none", "none", "none", "none", "none", "block", "none");
+      }, function (error) {
+        console.error('Error while logging out: ' + error);
+        showComponents("none", "none", "none", "none", "none", "block", "none");
+      });
     }
 
     // System event handler
@@ -683,7 +700,7 @@
         <input id="environment-url" placeholder="i.e: https://localhost:7777/ui/wwe/api.js" value="https://localhost:7777/ui/wwe/api.js"></input>
       </div>
       <div class="submit setup-row">
-        <button id="start-btn">Start</button>
+        <button id="start-btn" class="gux-primary">Start</button>
       </div>
     </div>
   </div>
@@ -691,6 +708,12 @@
     Logout succeeded.
     <br>
     Please refresh the page to log back in.
+  </div>
+  <div id="errorView" style="display: none">
+    <span id="error-message">An error has occured.</span>
+    <div class="logout-container">
+      <button class="gux-primary" onclick="window.authLogout()">Logout</button>
+    </div>
   </div>
   <div id="loadingAPIView" style="display: none">
     <div id="loadingMessage">Loading the API, please wait...</div>
