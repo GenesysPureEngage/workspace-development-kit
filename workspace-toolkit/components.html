@@ -308,7 +308,7 @@
     var AUTH_MODE = 'pop'; // "pop" or "iframe"
     var ENV_URL = 'https://localhost:7777/ui/wwe/api.js';
 
-    var isLoggingIn = false;
+    var isLoggingOut = false;
 
     var loginView, agentStateView, myChannelsView, communicatorView, interactionBarView, toasterView,
       myHistoryView, interactionsSearchView, contactDirectoryView,
@@ -318,7 +318,6 @@
     // Called when the toolkit api has been loaded
     window.onGenesysAPIReady = function () {
       showComponents("block", "none", "none", "none", "none", "none", "none");
-      isLoggingIn = true;
       // Log the agent in
       window.genesys.wwe.Auth.login({
         target: AUTH_MODE === 'pop' ? "authSignInBtnContainer" : 'iFrameAuthContainer',
@@ -473,7 +472,6 @@
               break;
             case "authenticationEnded":
               // When the authentication is completed
-              isLoggingIn = false;
               showComponents("block", "none", "none", "none", "none", "none", "none");
               break;
             case "authenticationPopupClosed":
@@ -483,14 +481,16 @@
               // When the authentication is not needed because the user is already authenticated
               break;
             case "initializationFailed":
-              // When something is wrong with Workspace initialization
-              console.log("Initialization failed: " + message);
-              var displayedMessage = 'Initialization failed : ' + message + '<br>';
-              document.getElementById("error-message").innerHTML = displayedMessage;
-              document.getElementById("authSignInBtnContainer").addEventListener("click", function () {
-                showComponents("none", "none", "block", "none", "none", "none", "none");
-              });
-              showComponents("none", "flex", "none", "none", "none", "none", "flex");
+              if (!isLoggingOut) {
+                // When something is wrong with Workspace initialization
+                console.log("Initialization failed: " + message);
+                var displayedMessage = 'Initialization failed : ' + message + '<br>';
+                document.getElementById("error-message").innerHTML = displayedMessage;
+                document.getElementById("authSignInBtnContainer").addEventListener("click", function () {
+                  showComponents("none", "none", "block", "none", "none", "none", "none");
+                });
+                showComponents("none", "flex", "none", "none", "none", "none", "flex");
+              }
               break;
             case "popupOpened":
               showComponents("none", "none", "block", "none", "none", "none", "none");
@@ -503,7 +503,8 @@
     };
 
     // Logs the agent out, remove views, and remove listeners
-    function logout() {
+    function logout () {
+      isLoggingOut = true;
       // And we log the agent out
       genesys.wwe.Auth.logout(function () {
         // Successfully logout
@@ -697,7 +698,7 @@
       </div>
       <div class="environment setup-row">
         <label><b>Environment URL:</b></label>
-        <input id="environment-url" placeholder="i.e: https://localhost:7777/ui/wwe/api.js" value="https://localhost:7777/ui/wwe/api.js"></input>
+        <input id="environment-url" placeholder="i.e: https://localhost:7777/ui/wwe/api.js" value="https://localhost:7777/ui/wwe/api.js"/>
       </div>
       <div class="submit setup-row">
         <button id="start-btn" class="gux-primary">Start</button>
@@ -800,6 +801,8 @@
   <!-- The API could be in another domain (CORS) -->
   <!-- <script id="genesys-toolkit-script" data-genesys-api-callback="onGenesysAPIReady" src="ENV_URL" charset="UTF-8"></script> -->
   <script>
+    showComponents("block", "none", "none", "none", "none", "none", "none");
+
     const lastAuthMode = window.localStorage.getItem('toolkit.sample.auth-mode') || 'pop';
     const lastEnvironmentUrl = window.localStorage.getItem('toolkit.sample.env-url') || 'https://localhost:7777/ui/wwe/api.js';
     
@@ -822,6 +825,33 @@
       ENV_URL = environmentUrlInput.value;
       appendToolkitScript();
     });
+
+    // Checks if a current-session exists
+    function getCurrentSession () {
+      const splits = environmentUrlInput.value.split('/');
+      const scheme = splits[0];
+      const domain = splits[2];
+      if (scheme && domain) {
+        const url = scheme + '//' + domain + '/workspace/v3/current-session';
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+              AUTH_MODE = authModeSelect.value;
+              ENV_URL = environmentUrlInput.value;
+              appendToolkitScript();
+            } else {
+              showComponents("none", "none", "none", "none", "flex", "none", "none");
+            }
+          }
+        }
+        xhr.open('get', url, true);
+        xhr.withCredentials = true;
+        xhr.timeout = 2500;
+        xhr.send();
+      }
+    }
+    getCurrentSession();
     
     // Adds the toolkit script dynamically, in order to support environment URL via input
     function appendToolkitScript () {
