@@ -256,6 +256,26 @@
           command = 'genesys.wwe.service.system.closeToast("wweCustomToast0", succeeded, failed)';
           commandHelp = 'Close a customizable toast.';
           break;
+        case "system.isFrameLeading":
+          command = 'genesys.wwe.service.system.isFrameLeading(succeeded, failed)';
+          commandHelp = 'Check if current tab is the Leader.';
+          break;
+        case "system.isFrameFollowing":
+          command = 'genesys.wwe.service.system.isFrameFollowing(succeeded, failed)';
+          commandHelp = 'Check if current tab is a Follower.';
+          break;
+        case "system.isFrameNegotiating":
+          command = 'genesys.wwe.service.system.isFrameNegotiating(succeeded, failed)';
+          commandHelp = 'Check if current tab is performing the Leader-election mechanism.';
+          break;
+        case "system.isFrameLeadingOrNegotiating":
+          command = 'genesys.wwe.service.system.isFrameLeadingOrNegotiating(succeeded, failed)';
+          commandHelp = 'Check if current tab is either Leader or performing the Leader-election mechanism.';
+          break;
+        case "system.isLastActiveFrame":
+          command = 'genesys.wwe.service.system.isLastActiveFrame(succeeded, failed)';
+          commandHelp = 'Check if current tab is the latest active frame or not.';
+          break;
         case 'configuration.getOption':
           command = 'genesys.wwe.service.configuration.getOption(["voice.*", "MySection/*"], succeeded, failed)';
           commandHelp = 'Get the value of an option.';
@@ -366,6 +386,12 @@
     <button onclick="showCommand('system.popupToast')">system.popupToast</button>
     <button onclick="showCommand('system.updateToast')">system.updateToast</button>
     <button onclick="showCommand('system.closeToast')">system.closeToast</button>
+    <br>
+    <button onclick="showCommand('system.isFrameLeading')">system.isFrameLeading</button>
+    <button onclick="showCommand('system.isFrameFollowing')">system.isFrameFollowing</button>
+    <button onclick="showCommand('system.isFrameNegotiating')">system.isFrameNegotiating</button>
+    <button onclick="showCommand('system.isFrameLeadingOrNegotiating')">system.isFrameLeadingOrNegotiating</button>
+    <button onclick="showCommand('system.isLastActiveFrame')">system.isLastActiveFrame</button>
     <br>
     <button onclick="showCommand('configuration.getOption')">configuration.getOption</button>
     <br>
