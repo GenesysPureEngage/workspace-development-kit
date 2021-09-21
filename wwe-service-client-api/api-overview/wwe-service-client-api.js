@@ -508,6 +508,21 @@ if (!window.genesys.wwe.service) {
         request: 'system.closeToast',
         parameters: [id]
       }, successCallback, failedCallback);
+    },
+    isFrameLeading: function (successCallback, failedCallback) {
+      service.sendMessage({ request: "system.isFrameLeading" }, successCallback, failedCallback);
+    },
+    isFrameFollowing: function (successCallback, failedCallback) {
+      service.sendMessage({ request: "system.isFrameFollowing" }, successCallback, failedCallback);
+    },
+    isFrameNegotiating: function (successCallback, failedCallback) {
+      service.sendMessage({ request: "system.isFrameNegotiating" }, successCallback, failedCallback);
+    },
+    isFrameLeadingOrNegotiating: function (successCallback, failedCallback) {
+      service.sendMessage({ request: "system.isFrameLeadingOrNegotiating" }, successCallback, failedCallback);
+    },
+    isLastActiveFrame: function (successCallback, failedCallback) {
+      service.sendMessage({ request: "system.isLastActiveFrame" }, successCallback, failedCallback);
     }
   };
 
