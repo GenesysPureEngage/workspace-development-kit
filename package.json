@@ -2,7 +2,7 @@
   "name": "workspace-development-kit",
   "scripts": {
     "build": "run-p build:scapi build:toolkit",
-    "build:scapi": "copyfiles -f ./wwe-service-client-api/api-overview/** ./docs/wwe-service-client-api",
+    "build:scapi": "copyfiles -f ./wwe-service-client-api/api-overview/** ./docs/wwe-service-client-api/api-overview",
     "build:toolkit": "copyfiles -f ./workspace-toolkit/samples/** ./docs/workspace-toolkit",
     "serve": "serve -p 3000 --cors docs"
   },
