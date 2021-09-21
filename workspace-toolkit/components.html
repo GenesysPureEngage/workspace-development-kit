@@ -803,8 +803,12 @@
   <script>
     showComponents("block", "none", "none", "none", "none", "none", "none");
 
-    const lastAuthMode = window.localStorage.getItem('toolkit.sample.auth-mode') || 'pop';
-    const lastEnvironmentUrl = window.localStorage.getItem('toolkit.sample.env-url') || 'https://localhost:7777/ui/wwe/api.js';
+    let lastAuthMode = 'pop';
+    let lastEnvironmentUrl = 'https://localhost:7777/ui/wwe/api.js';
+    if (window.localStorage) {
+      lastAuthMode = window.localStorage.getItem('toolkit.sample.auth-mode') || lastAuthMode;
+      lastEnvironmentUrl = window.localStorage.getItem('toolkit.sample.env-url') || lastEnvironmentUrl;
+    }
     
     var authModeSelect = document.getElementById('auth-mode');
     var environmentUrlInput = document.getElementById('environment-url');
@@ -815,10 +819,14 @@
     environmentUrlInput.value = lastEnvironmentUrl;
 
     authModeSelect.addEventListener('change', function () {
-      window.localStorage.setItem('toolkit.sample.auth-mode', authModeSelect.value);
+      if (window.localStorage) {
+        window.localStorage.setItem('toolkit.sample.auth-mode', authModeSelect.value);
+      }
     });
     environmentUrlInput.addEventListener('input', function () {
-      window.localStorage.setItem('toolkit.sample.env-url', environmentUrlInput.value);
+      if (window.localStorage) {
+        window.localStorage.setItem('toolkit.sample.env-url', environmentUrlInput.value);
+      }
     });
     startButton.addEventListener('click', function () {
       AUTH_MODE = authModeSelect.value;
