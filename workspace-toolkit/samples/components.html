@@ -340,7 +340,8 @@
       window.genesys.wwe.Auth.login({
         target: AUTH_MODE === 'pop' ? "authSignInBtnContainer" : 'iFrameAuthContainer',
         createNode: true,
-        authMode: AUTH_MODE
+        authMode: AUTH_MODE,
+        enableSessionErrorDetails: true
       }, function () {
           // Login succeed
 
