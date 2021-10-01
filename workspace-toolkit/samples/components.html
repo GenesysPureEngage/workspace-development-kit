@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 <head>
   <title>Workspace Toolkit - Components</title>
   <meta charset='utf-8' />
@@ -300,6 +300,24 @@
       min-width: 50px;
       padding: 10px;
     }
+    pre {
+      text-align: left;
+    }
+    .sessionErrorBtnActionsContainer {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-around;
+      width: 100%;
+      margin: 10px 0px 0px 0px;
+      }
+    .appUrl-container {
+      display: none;
+    }
+    .logoutUrl-container {
+      display: none;
+    }
   </style>
 
   <script>
@@ -453,10 +471,10 @@
             console.log(data);
           }
         },
-        function (progressType, message, allowLogout) {
-          // Login progress status
-          console.log("Login progress: " + progressType);
-          switch (progressType) {
+        function (notificationType, message, allowLogout) {
+          // Notification callback status
+          console.log("Notification callback: " + notificationType);
+          switch (notificationType) {
             case "authenticationStarted":
               // When the authentication has been prompted to the user
               if (AUTH_MODE === 'iframe') {
@@ -494,6 +512,47 @@
               break;
             case "popupOpened":
               showComponents("none", "none", "block", "none", "none", "none", "none");
+              break;
+            case "sessionError":
+              // When something is wrong. Info in JSON format in 'message' property
+              console.log("Session error: " + JSON.stringify(message, null, '\t'));
+              var displayedMessage = 'Session error :<br><code>';
+              const messageKeys = Object.keys(message);
+              for (var i = 0; i < messageKeys.length; i++) {
+                displayedMessage += messageKeys[i] + ' = ' + message[messageKeys[i]] + '<br>';
+              }
+              displayedMessage += '</code>';
+              document.getElementById("error-message").innerHTML = displayedMessage;
+
+              // Get appUrl button
+              var goToAppUrlContainer = document.getElementById('goToAppUrlContainer');
+              var appUrlBtn = document.getElementById('appUrlBtn');
+              if (message.appUrl) {
+                appUrlBtn.onclick = function() { window.location.href = message.appUrl; };
+                goToAppUrlContainer.style = 'display: block';
+              } else {
+                appUrlBtn.onclick = null;
+                goToAppUrlContainer.style = 'display: none';
+              }
+
+              // Get logoutUrl button
+              var goToLogoutUrlContainer = document.getElementById('goToLogoutUrlContainer');
+              var logoutUrlBtn = document.getElementById('logoutUrlBtn');
+
+              if (message.allowLogout || message.canChangeAccount) {
+                logoutUrlBtn.onclick = function() { window.location.href = message.logoutUrl; };
+                goToLogoutUrlContainer.style = 'display: block';
+              } else {
+                logoutUrlBtn.onclick = null;
+                goToLogoutUrlContainer.style = 'display: none';
+              }
+
+              document.getElementById("authSignInBtnContainer").addEventListener("click", function () {
+                showComponents("none", "none", "block", "none", "none", "none", "none");
+              });
+              showComponents("none", "flex", "none", "none", "none", "none", "flex");
+              document.getElementById("logoutContainer").style.display = 'none';
+              document.getElementById("iFrameAuth").style.display = 'none';
               break;
             default:
               break;
@@ -651,7 +710,7 @@
           label.innerText = 'WWE v' + info.version;
         });
     }
-    
+
     // Command called before closing an interaction
     function checkBeforeClose() {
       if (!document.getElementById('mandatoryCheckbox').checked) {
@@ -691,7 +750,7 @@
     <div class="setup-container">
       <div class="auth setup-row">
         <label><b>Auth Mode:</b></label>
-        <select id="auth-mode">
+        <select title="Choose Authentication Mode" id="auth-mode">
           <option value="iframe">Iframe</option>
           <option value="pop">Popup</option>
         </select>
@@ -712,8 +771,16 @@
   </div>
   <div id="errorView" style="display: none">
     <span id="error-message">An error has occured.</span>
-    <div class="logout-container">
+    <div id="logoutContainer" class="logout-container">
       <button class="gux-primary" onclick="window.authLogout()">Logout</button>
+    </div>
+    <div class="sessionErrorBtnActionsContainer">
+      <div id="goToLogoutUrlContainer" class="logoutUrl-container">
+        <button id="logoutUrlBtn" class="gux-primary">logoutUrl</button>
+      </div>
+      <div id="goToAppUrlContainer" class="appUrl-container">
+        <button id="appUrlBtn" class="gux-primary">appUrl</button>
+      </div>
     </div>
   </div>
   <div id="loadingAPIView" style="display: none">
@@ -765,7 +832,7 @@
       <h2>Interaction Bar</h2>
       <div id="myCustomInteractionBar"></div>
 
-      Check this item to be able to close the voice interaction <input type="checkbox" id="mandatoryCheckbox">
+      Check this item to be able to close the voice interaction <input type="checkbox" id="mandatoryCheckbox" title="Mandatory Checkbox">
 
       <h2>Interaction Container</h2>
       <div id="myCustomInteractionContainer"></div>
@@ -809,7 +876,7 @@
       lastAuthMode = window.localStorage.getItem('toolkit.sample.auth-mode') || lastAuthMode;
       lastEnvironmentUrl = window.localStorage.getItem('toolkit.sample.env-url') || lastEnvironmentUrl;
     }
-    
+
     var authModeSelect = document.getElementById('auth-mode');
     var environmentUrlInput = document.getElementById('environment-url');
     var startButton = document.getElementById('start-btn');
@@ -860,7 +927,7 @@
       }
     }
     getCurrentSession();
-    
+
     // Adds the toolkit script dynamically, in order to support environment URL via input
     function appendToolkitScript () {
       if (toolkitScript) {
