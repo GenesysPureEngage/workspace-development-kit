@@ -7,14 +7,14 @@ if (!window.genesys) { window.genesys = {}; }
 if (!window.genesys.wwe) { window.genesys.wwe = {}; }
 if (!window.genesys.wwe.service) {
   /**
-   * This is the WWE service client API.
-   * @constructor ServiceClientAPI
-   */
+  * This is the WWE service client API.
+  * @constructor ServiceClientAPI
+  */
   var ServiceClientAPI = function () {
     /*
-     * To prevent security issue the argument '*' in the postMessage has to be replaced by the Workspace Web Edition host to avoid a vulnerability issue.
-     * '*' should be replaced with 'http://<my-wwe-server>'.
-     */
+    * To prevent security issue the argument '*' in the postMessage has to be replaced by the Workspace Web Edition host to avoid a vulnerability issue.
+    * '*' should be replaced with 'http://<my-wwe-server>'.
+    */
     var postMessageOrigin = '*';
 
     var self = this,
@@ -25,8 +25,8 @@ if (!window.genesys.wwe.service) {
     // Public members
 
     /**
-     * Cleanup the object.
-     */
+    * Cleanup the object.
+    */
     this.unload = function () {
       var requestedEventsClone = requestedEvents.slice(0);
       for (var i = 0; i < requestedEventsClone.length; i++) {
@@ -37,13 +37,13 @@ if (!window.genesys.wwe.service) {
     };
 
     /**
-     * Parse a received command.
-     * @param {Window} sourceWindow The DOM source window of the message.
-     * @param {object} message The message to parse.
-     * @param {string} message.request The request.
-     * @param {object} [message.referenceId] An optional string pass in the answer event.
-     * @return {string} A reference identifier in case of a requested value.
-     */
+    * Parse a received command.
+    * @param {Window} sourceWindow The DOM source window of the message.
+    * @param {object} message The message to parse.
+    * @param {string} message.request The request.
+    * @param {object} [message.referenceId] An optional string pass in the answer event.
+    * @return {string} A reference identifier in case of a requested value.
+    */
     this.sendMessage = function (message, successCallback, failedCallback) {
       if (!message.referenceId) {
         message.referenceId = '' + currentReferenceId++;
@@ -76,12 +76,12 @@ if (!window.genesys.wwe.service) {
     };
 
     /**
-     * Subscribe to an events.
-     * @param {string|string[]} event The event name or an array of event name.
-     * @param {function} callback The callback function called when an event arrive.
-     * @param {object} [context] An optional context object to call the callback function with.
-     * @return {object} Itself.
-     */
+    * Subscribe to an events.
+    * @param {string|string[]} event The event name or an array of event name.
+    * @param {function} callback The callback function called when an event arrive.
+    * @param {object} [context] An optional context object to call the callback function with.
+    * @return {object} Itself.
+    */
     this.subscribe = function (event, callback, context) {
       this.sendMessage({
         event: 'subscribe',
@@ -111,11 +111,11 @@ if (!window.genesys.wwe.service) {
     };
 
     /**
-     * Unsubscribe to an events.
-     * @param {string} event The event name.
-     * @param {function} callback The callback function called when an event arrive.
-     * @return {object} Itself.
-     */
+    * Unsubscribe to an events.
+    * @param {string} event The event name.
+    * @param {function} callback The callback function called when an event arrive.
+    * @return {object} Itself.
+    */
     this.unsubscribe = function (callback) {
       var subscription = subscriptionsByCallback[callback];
       if (subscription) {
@@ -136,9 +136,9 @@ if (!window.genesys.wwe.service) {
     };
 
     /**
-     *
-     * @param {Window} sourceWindow The DOM source IFRAME embendding Workspace Web Edition.
-     */
+    *
+    * @param {Window} sourceWindow The DOM source IFRAME embendding Workspace Web Edition.
+    */
     this.targetWWEWindow = function (window) {
       theWWEWindow = window;
     };
@@ -151,10 +151,10 @@ if (!window.genesys.wwe.service) {
       subscriptionsByEventName = {};
 
     /**
-     * Parse a received command.
-     * @param {object} message The message to parse.
-     * @private
-     */
+    * Parse a received command.
+    * @param {object} message The message to parse.
+    * @private
+    */
     var postMessageToParentFrame = function (message) {
       message = message || {};
       message.userAgent = 'WWE Client';
@@ -172,11 +172,11 @@ if (!window.genesys.wwe.service) {
     };
 
     /**
-     * Remove the internal eventRequest object from the pending requestedEvents list.
-     * @param {object} eventRequest The internal eventRequest object.
-     * @return {boolean} true if the eventRequest has been found and removed; false otherwise.
-     * @private
-     */
+    * Remove the internal eventRequest object from the pending requestedEvents list.
+    * @param {object} eventRequest The internal eventRequest object.
+    * @return {boolean} true if the eventRequest has been found and removed; false otherwise.
+    * @private
+    */
     var removeEventRequest = function (eventRequest) {
       var pos = requestedEvents.indexOf(eventRequest);
       if (pos != -1) {
@@ -191,10 +191,10 @@ if (!window.genesys.wwe.service) {
     };
 
     /**
-     * Handle global postMessage events.
-     * @param {object} message The received message event.
-     * @private
-     */
+    * Handle global postMessage events.
+    * @param {object} message The received message event.
+    * @private
+    */
     var receiveMessage = function (message) {
       if (message && message.data && message.data.userAgent && message.data.userAgent.indexOf('WWE') !== -1) {
 
@@ -460,6 +460,64 @@ if (!window.genesys.wwe.service) {
     }
   };
 
+  service.outbound = {
+    getCampaigns: function (successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.getCampaigns" }, successCallback, failedCallback);
+    },
+    getPreviewRecord: function (campaignName, successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.getPreviewRecord", parameters: [campaignName] }, successCallback, failedCallback);
+    },
+    getChainedRecords: function(interactionId, successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.getChainedRecords", parameters: [interactionId] }, successCallback, failedCallback);
+    },
+    getRecordFields: function(interactionId, successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.getRecordFields", parameters: [interactionId] }, successCallback, failedCallback);
+    },
+    updateRecordFields: function(interactionId, recordData, successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.updateRecordFields", parameters: [interactionId, recordData] }, successCallback, failedCallback);
+    },
+    callPreviewRecord: function (interactionId, recordHandle, successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.callPreviewRecord", parameters: [interactionId, recordHandle] }, successCallback, failedCallback);
+    },
+    rejectPreviewRecord: function (interactionId, successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.rejectPreviewRecord", parameters: [interactionId] }, successCallback, failedCallback);
+    },
+    cancelPreviewRecord: function (interactionId, successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.cancelPreviewRecord", parameters: [interactionId] }, successCallback, failedCallback);
+    },
+    startDirectPushPreview: function (successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.startDirectPushPreview" }, successCallback, failedCallback);
+    },
+    stopDirectPushPreview: function (successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.stopDirectPushPreview" }, successCallback, failedCallback);
+    },
+    rescheduleRecord: function (interactionId, recordHandle, rescheduleDate, callbackType, successCallback, failedCallback) {
+      service.sendMessage(
+        { request: "outbound.rescheduleRecord", parameters: [interactionId, recordHandle, rescheduleDate, callbackType] },
+        successCallback,
+        failedCallback
+      );
+    },
+    cancelReschedule: function (interactionId, successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.cancelReschedule", parameters: [interactionId] }, successCallback, failedCallback);
+    },
+    getListOfCallResults: function(successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.getListOfCallResults" }, successCallback, failedCallback);
+    },
+    setCallResult: function(interactionId, callResult, successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.setCallResult", parameters: [interactionId, callResult] }, successCallback, failedCallback);
+    },
+    getCallResult : function(interactionId, successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.getCallResult", parameters: [interactionId] }, successCallback, failedCallback);
+    },
+    setDoNotCall: function(interactionId, successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.setDoNotCall", parameters: [interactionId] }, successCallback, failedCallback);
+    },
+    removeDoNotCall: function(interactionId, successCallback, failedCallback) {
+      service.sendMessage({ request: "outbound.removeDoNotCall", parameters: [interactionId] }, successCallback, failedCallback);
+    }
+  };
+
   service.media = {
     setState: function (mediaName, stateListIndex, successCallback, failedCallback) {
       service.sendMessage({
@@ -510,19 +568,29 @@ if (!window.genesys.wwe.service) {
       }, successCallback, failedCallback);
     },
     isFrameLeading: function (successCallback, failedCallback) {
-      service.sendMessage({ request: "system.isFrameLeading" }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'system.isFrameLeading'
+      }, successCallback, failedCallback);
     },
     isFrameFollowing: function (successCallback, failedCallback) {
-      service.sendMessage({ request: "system.isFrameFollowing" }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'system.isFrameFollowing'
+      }, successCallback, failedCallback);
     },
     isFrameNegotiating: function (successCallback, failedCallback) {
-      service.sendMessage({ request: "system.isFrameNegotiating" }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'system.isFrameNegotiating'
+      }, successCallback, failedCallback);
     },
     isFrameLeadingOrNegotiating: function (successCallback, failedCallback) {
-      service.sendMessage({ request: "system.isFrameLeadingOrNegotiating" }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'system.isFrameLeadingOrNegotiating'
+      }, successCallback, failedCallback);
     },
     isLastActiveFrame: function (successCallback, failedCallback) {
-      service.sendMessage({ request: "system.isLastActiveFrame" }, successCallback, failedCallback);
+      service.sendMessage({
+        request: 'system.isLastActiveFrame'
+      }, successCallback, failedCallback);
     }
   };
 
