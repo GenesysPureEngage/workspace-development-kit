@@ -180,7 +180,7 @@
           commandHelp = 'Request a Pull Preview record from OCS';
           break;
         case 'outbound.callPreviewRecord':
-          command = 'genesys.wwe.service.outbound.callPreviewRecord("1", succeeded, failed)';
+          command = 'genesys.wwe.service.outbound.callPreviewRecord("1", 1, succeeded, failed)';
           commandHelp = 'Call an Outbound Preview record';
           break;
         case 'outbound.rejectPreviewRecord':
@@ -198,6 +198,52 @@
         case 'outbound.stopDirectPushPreview':
           command = 'genesys.wwe.service.outbound.stopDirectPushPreview(succeeded, failed)';
           commandHelp = 'Stop receiving Direct Push Preview records';
+          break;
+        case 'outbound.rescheduleRecord':
+          var date = new Date();
+          date.setTime(date.getTime() + 30 * 60 * 1000);
+          command = 'genesys.wwe.service.outbound.rescheduleRecord("1", 1, "' + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + '", "CAMPAIGN", succeeded, failed)';
+          commandHelp = 'Reschedule outbound record';
+          break;
+        case 'outbound.cancelReschedule':
+          command = 'genesys.wwe.service.outbound.cancelReschedule("1", succeeded, failed)';
+          commandHelp = 'Cancel outbound record reschedule';
+          break;
+        case 'outbound.getListOfCallResults':
+          command = 'genesys.wwe.service.outbound.getListOfCallResults(succeeded, failed)';
+          commandHelp = 'get list of Call Results for outbound';
+          break;
+        case 'outbound.setCallResult':
+          command = 'genesys.wwe.service.outbound.setCallResult("1", 6, succeeded, failed)';
+          commandHelp = 'Set Call Result for outbound record';
+          break;
+        case 'outbound.getCallResult':
+          command = 'genesys.wwe.service.outbound.getCallResult("1", succeeded, failed)';
+          commandHelp = 'Get Call Result for outbound record';
+          break;
+        case 'outbound.setDoNotCall':
+          command = 'genesys.wwe.service.outbound.setDoNotCall("1", succeeded, failed)';
+          commandHelp = 'Set Do Not Call for outbound record';
+          break;
+        case 'outbound.removeDoNotCall':
+          command = 'genesys.wwe.service.outbound.removeDoNotCall("1", succeeded, failed)';
+          commandHelp = 'Remove Do Not Call for outbound record';
+          break;
+        case 'outbound.getChainedRecords':
+          command = 'genesys.wwe.service.outbound.getChainedRecords("1", succeeded, failed)';
+          commandHelp = 'Get chain of records for the interaction';
+          break;
+        case 'outbound.getRecordFields':
+          command = 'genesys.wwe.service.outbound.getRecordFields("1", succeeded, failed)';
+          commandHelp = 'Get the calling list fields of the currently selected outbound record for the interaction';
+          break;
+        case 'outbound.updateRecordFields':
+          command = 'genesys.wwe.service.outbound.updateRecordFields("1", {\n\
+            GSW_FROM: "10:10",\n\
+            GSW_CUSTOM_STRING: "string value",\n\
+            GSW_CUSTOM_DATE: "10/10/2021 23:45",\n\
+          }, succeeded, failed)';
+          commandHelp = 'Update the calling list fields of the currently selected outbound record for the interaction';
           break;
         case 'media.getMediaList':
           command = 'genesys.wwe.service.media.getMediaList(succeeded, failed)';
@@ -375,11 +421,21 @@
     <br>
     <button onclick="showCommand('outbound.getCampaigns')">outbound.getCampaigns</button>
     <button onclick="showCommand('outbound.getPreviewRecord')">outbound.getPreviewRecord</button>
+    <button onclick="showCommand('outbound.getChainedRecords')">outbound.getChainedRecords</button>
+    <button onclick="showCommand('outbound.getRecordFields')">outbound.getRecordFields</button>
+    <button onclick="showCommand('outbound.updateRecordFields')">outbound.updateRecordFields</button>
     <button onclick="showCommand('outbound.callPreviewRecord')">outbound.callPreviewRecord</button>
     <button onclick="showCommand('outbound.rejectPreviewRecord')">outbound.rejectPreviewRecord</button>
     <button onclick="showCommand('outbound.cancelPreviewRecord')">outbound.cancelPreviewRecord</button>
     <button onclick="showCommand('outbound.startDirectPushPreview')">outbound.startDirectPushPreview</button>
     <button onclick="showCommand('outbound.stopDirectPushPreview')">outbound.stopDirectPushPreview</button>
+    <button onclick="showCommand('outbound.rescheduleRecord')">outbound.rescheduleRecord</button>
+    <button onclick="showCommand('outbound.cancelReschedule')">outbound.cancelReschedule</button>
+    <button onclick="showCommand('outbound.getListOfCallResults')">outbound.getListOfCallResults</button>
+    <button onclick="showCommand('outbound.setCallResult')">outbound.setCallResult</button>
+    <button onclick="showCommand('outbound.getCallResult')">outbound.getCallResult</button>
+    <button onclick="showCommand('outbound.setDoNotCall')">outbound.setDoNotCall</button>
+    <button onclick="showCommand('outbound.removeDoNotCall')">outbound.removeDoNotCall</button>
     <br>
     <button onclick="showCommand('system.triggerActivity')">system.triggerActivity</button>
     <button onclick="showCommand('system.getAllowedServices')">system.getAllowedServices</button>
