@@ -594,6 +594,14 @@ if (!window.genesys.wwe.service) {
     }
   };
 
+  service.messenger = {
+    broadcastMessage: function (channel, message, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'messenger.broadcastMessage', parameters: [channel, message]
+      }, successCallback, failedCallback);
+    }
+  };
+
   service.configuration = {
     getOption: function (parameters, successCallback, failedCallback) {
       service.sendMessage({
