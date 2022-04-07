@@ -322,6 +322,10 @@
           command = 'genesys.wwe.service.system.isLastActiveFrame(succeeded, failed)';
           commandHelp = 'Check if current tab is the latest active frame or not.';
           break;
+        case "messenger.broadcastMessage":
+          command = 'genesys.wwe.service.messenger.broadcastMessage("my-channel", { foo: "A foo text.", bar: 1234 }, succeeded, failed)';
+          commandHelp = 'Send a message to the other frames which have subscribed with: genesys.wwe.service.subscribe([ "messenger:my-channel" ], ...).';
+          break;
         case 'configuration.getOption':
           command = 'genesys.wwe.service.configuration.getOption(["voice.*", "MySection/*"], succeeded, failed)';
           commandHelp = 'Get the value of an option.';
@@ -448,6 +452,8 @@
     <button onclick="showCommand('system.isFrameNegotiating')">system.isFrameNegotiating</button>
     <button onclick="showCommand('system.isFrameLeadingOrNegotiating')">system.isFrameLeadingOrNegotiating</button>
     <button onclick="showCommand('system.isLastActiveFrame')">system.isLastActiveFrame</button>
+    <br>
+    <button onclick="showCommand('messenger.broadcastMessage')">messenger.broadcastMessage</button>
     <br>
     <button onclick="showCommand('configuration.getOption')">configuration.getOption</button>
     <br>
