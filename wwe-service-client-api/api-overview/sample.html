@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
 * WWE Service Client API is being released under the standard MIT License.
-* Copyright (c) 2020 Genesys. All rights reserved.
+* Copyright (c) 2020-2022 Genesys. All rights reserved.
 -->
 <html lang="en-US">
 
@@ -279,7 +279,8 @@
             //buttons: [ "Show", "Dismiss" ]\n\
             buttonShowDismiss: true,\n\
             autoCloseTimeout: 20000,\n\
-            sendToMyMessage: true\n\
+            sendToMyMessage: true,\n\
+            width: 500\n\
           }, succeeded, failed)';
           commandHelp = 'Popup a customizable toast.';
           break;
@@ -301,6 +302,22 @@
         case 'system.closeToast':
           command = 'genesys.wwe.service.system.closeToast("wweCustomToast0", succeeded, failed)';
           commandHelp = 'Close a customizable toast.';
+          break;
+        case 'system.openDialog':
+          command = 'genesys.wwe.service.system.openDialog("<url>?dialogId=$Dialog.Id$", {\n\
+  label: "Dialog $Agent.FullName$",\n\
+  width: "430px",\n\
+  height: "40%"\n\
+}, succeeded, failed)';
+          commandHelp = "Open a customizable dialog.";
+          break;
+        case 'system.closeDialog':
+          command = 'genesys.wwe.service.system.closeDialog("wweCustomDialog1", succeeded, failed)';
+          commandHelp = 'Close a dialog.';
+          break;
+        case 'system.amIVisible':
+          command = 'setTimeout(function(){ genesys.wwe.service.system.amIVisible(succeeded, failed); }, 3000)';
+          commandHelp = 'Get the current visibility state of the frame.';
           break;
         case "system.isFrameLeading":
           command = 'genesys.wwe.service.system.isFrameLeading(succeeded, failed)';
@@ -446,6 +463,9 @@
     <button onclick="showCommand('system.popupToast')">system.popupToast</button>
     <button onclick="showCommand('system.updateToast')">system.updateToast</button>
     <button onclick="showCommand('system.closeToast')">system.closeToast</button>
+    <button onclick="showCommand('system.openDialog')">system.openDialog</button>
+    <button onclick="showCommand('system.closeDialog')">system.closeDialog</button>
+    <button onclick="showCommand('system.amIVisible')">system.amIVisible</button>
     <br>
     <button onclick="showCommand('system.isFrameLeading')">system.isFrameLeading</button>
     <button onclick="showCommand('system.isFrameFollowing')">system.isFrameFollowing</button>
