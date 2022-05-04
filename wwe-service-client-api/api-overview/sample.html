@@ -304,8 +304,8 @@
           commandHelp = 'Close a customizable toast.';
           break;
         case 'system.openDialog':
-          command = 'genesys.wwe.service.system.openDialog("<url>?dialogId=$Dialog.Id$", {\n\
-  label: "Dialog $Agent.FullName$",\n\
+          command = 'genesys.wwe.service.system.openDialog("' + window.location.href.substr(0, window.location.href.lastIndexOf("/") + 1) + 'dialog-popup.html?dialogId=$Dialog.Id$", {\n\
+  label: "Custom Dialog $Agent.FullName$",\n\
   width: "430px",\n\
   height: "40%"\n\
 }, succeeded, failed)';
