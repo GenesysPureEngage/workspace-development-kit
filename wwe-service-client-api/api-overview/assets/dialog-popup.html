@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Custom API Sample: DialogFrame</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+		<script src="../wwe-service-client-api.js"></script>
+
+		<script>
+			// Get the dialog identifier if it exists.
+			var dialogId = "",
+				matchDialogId = /dialogId=([^&]+)/.exec(window.location.search);
+			if(matchDialogId)
+				dialogId = matchDialogId[1];
+
+
+			function closeDialog() {
+				genesys.wwe.service.system.closeDialog(dialogId);
+			}
+
+		</script>
+	</head>
+	<body style="text-align: center">
+		<img src="genesys.jpg" alt="Logo">
+		<div>Genesys</div>
+		<div>A message.</div>
+		<button class="btn btn-primary" onclick="closeDialog()" style="position: absolute; right: 4px; bottom: 4px;">Close Dialog</button>
+	</body>
+</html>

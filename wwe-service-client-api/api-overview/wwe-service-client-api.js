@@ -1,6 +1,6 @@
 /**
  * WWE Service Client API is being released under the standard MIT License.
- * Copyright (c) 2020 Genesys. All rights reserved.
+ * Copyright (c) 2020-2022 Genesys. All rights reserved.
  */
 
 if (!window.genesys) { window.genesys = {}; }
@@ -565,6 +565,23 @@ if (!window.genesys.wwe.service) {
       service.sendMessage({
         request: 'system.closeToast',
         parameters: [id]
+      }, successCallback, failedCallback);
+    },
+    openDialog: function (url, options, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'system.openDialog',
+        parameters: [url, options]
+      }, successCallback, failedCallback);
+    },
+    closeDialog: function (dialogId, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'system.closeDialog',
+        parameters: [dialogId]
+      }, successCallback, failedCallback);
+    },
+    amIVisible: function (successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'system.amIVisible'
       }, successCallback, failedCallback);
     },
     isFrameLeading: function (successCallback, failedCallback) {
