@@ -348,6 +348,36 @@ if (!window.genesys.wwe.service) {
         request: 'interaction.reject',
         parameters: [interactionId]
       }, successCallback, failedCallback);
+    },
+    singleStepTransfer: function (interactionId, target, userData, extensions, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'interaction.singleStepTransfer',
+        parameters: [interactionId, target, userData, extensions]
+      }, successCallback, failedCallback);
+    },
+    singleStepConference: function (interactionId, target, userData, extensions, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'interaction.singleStepConference',
+        parameters: [interactionId, target, userData, extensions]
+      }, successCallback, failedCallback);
+    },
+    consult: function (interactionId, target, userData, extensions, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'interaction.consult',
+        parameters: [interactionId, target, userData, extensions]
+      }, successCallback, failedCallback);
+    },
+    completeTransfer: function (consultInteractionId, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'interaction.completeTransfer',
+        parameters: [consultInteractionId]
+      }, successCallback, failedCallback);
+    },
+    completeConference: function (consultInteractionId, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'interaction.completeConference',
+        parameters: [consultInteractionId]
+      }, successCallback, failedCallback);
     }
   };
 
@@ -362,6 +392,9 @@ if (!window.genesys.wwe.service) {
         request: 'voice.dial',
         parameters: [destination, userData]
       }, successCallback, failedCallback);
+    },
+    dialEx: function (destination, userData, extensions, successCallback, failedCallback) {
+      service.sendMessage({ request: "voice.dialEx", parameters: [destination, userData, extensions] }, successCallback, failedCallback);
     },
     answer: function (interactionId, successCallback, failedCallback) {
       service.sendMessage({

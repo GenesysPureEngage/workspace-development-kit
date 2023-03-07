@@ -107,9 +107,33 @@
           command = 'genesys.wwe.service.interaction.reject("1", succeeded, failed)';
           commandHelp = 'Reject the interaction.';
           break;
+        case 'interaction.singleStepTransfer':
+          command = 'genesys.wwe.service.interaction.singleStepTransfer("1", { type: "AGENT", destination: "SIP_5001" }, { k1: "v1", k2: "v2" }, { ek1: "ev1", ek2: "ev2" }, succeeded, failed)';
+          commandHelp = 'Single step transfer the interaction.';
+          break;
+        case 'interaction.singleStepConference':
+          command = 'genesys.wwe.service.interaction.singleStepConference("1", { type: "AGENT", destination: "SIP_5001" }, { k1: "v1", k2: "v2" }, { ek1: "ev1", ek2: "ev2" }, succeeded, failed)';
+          commandHelp = 'Single step conference the interaction.';
+          break;
+        case 'interaction.consult':
+          command = 'genesys.wwe.service.interaction.consult("1", { type: "AGENT", destination: "SIP_5001", media: "voice" }, { k1: "v1", k2: "v2" }, { ek1: "ev1", ek2: "ev2" }, succeeded, failed)';
+          commandHelp = 'Consult the interaction.';
+          break;
+        case 'interaction.completeTransfer':
+          command = 'genesys.wwe.service.interaction.completeTransfer("2", succeeded, failed)';
+          commandHelp = 'Complete transfer the interaction.';
+          break;
+        case 'interaction.completeConference':
+          command = 'genesys.wwe.service.interaction.completeConference("2", succeeded, failed)';
+          commandHelp = 'Complete conference the interaction.';
+          break;
         case 'voice.dial':
           command = 'genesys.wwe.service.voice.dial("*PhoneNumber*", { myAttachedDataKey1: "myAttachedDataValue1", myAttachedDataKey2: "myAttachedDataValue2" }, succeeded, failed)';
           commandHelp = 'Call the destination with the optional attached data.';
+          break;
+        case 'voice.dialEx':
+          command = 'genesys.wwe.service.voice.dialEx("*PhoneNumber*", { myAttachedDataKey1: "myAttachedDataValue1", myAttachedDataKey2: "myAttachedDataValue2" }, { myExtensionKey1: "myExtensionValue1", myExtensionKey2: "myExtensionValue2" }, succeeded, failed)';
+          commandHelp = 'Call the destination with the attached data and extensions.';
           break;
         case 'voice.answer':
           command = 'genesys.wwe.service.voice.answer("1", succeeded, failed)';
@@ -309,7 +333,7 @@
   width: "430px",\n\
   height: "40%"\n\
 }, succeeded, failed)';
-          commandHelp = "Open a customizable dialog.";
+          commandHelp = 'Open a customizable dialog.';
           break;
         case 'system.closeDialog':
           command = 'genesys.wwe.service.system.closeDialog("wweCustomDialog1", succeeded, failed)';
@@ -422,8 +446,14 @@
     <button onclick="showCommand('interaction.unblockMarkdone')">interaction.unblockMarkdone</button>
     <button onclick="showCommand('interaction.accept')">interaction.accept</button>
     <button onclick="showCommand('interaction.reject')">interaction.reject</button>
+    <button onclick="showCommand('interaction.singleStepTransfer')">interaction.singleStepTransfer</button>
+    <button onclick="showCommand('interaction.singleStepConference')">interaction.singleStepConference</button>
+    <button onclick="showCommand('interaction.consult')">interaction.consult</button>
+    <button onclick="showCommand('interaction.completeTransfer')">interaction.completeTransfer</button>
+    <button onclick="showCommand('interaction.completeConference')">interaction.completeConference</button>
     <br>
     <button onclick="showCommand('voice.dial')">voice.dial</button>
+    <button onclick="showCommand('voice.dialEx')">voice.dialEx</button>
     <button onclick="showCommand('voice.answer')">voice.answer</button>
     <button onclick="showCommand('voice.hold')">voice.hold</button>
     <button onclick="showCommand('voice.resume')">voice.resume</button>
