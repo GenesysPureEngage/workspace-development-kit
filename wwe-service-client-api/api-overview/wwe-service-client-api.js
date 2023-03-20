@@ -122,7 +122,7 @@ if (!window.genesys.wwe.service) {
         delete subscriptionsByCallback[callback];
         if (Array.isArray(subscription.event)) {
           subscription.event.forEach(function (e) {
-            delete subscriptionsByEventName[subscription.event];
+            delete subscriptionsByEventName[e];
           });
         } else {
           delete subscriptionsByEventName[subscription.event];
