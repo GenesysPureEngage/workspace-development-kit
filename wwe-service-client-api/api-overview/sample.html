@@ -256,6 +256,21 @@
           command = 'genesys.wwe.service.system.closeToast("wweCustomToast0", succeeded, failed)';
           commandHelp = 'Close a customizable toast.';
           break;
+        case 'system.updateViewInApplicationMenuBar':
+          command = 'genesys.wwe.service.system.updateViewInApplicationMenuBar({\n\
+            name: "view0",\n\
+            iconUrl: "https://cdn1.iconfinder.com/data/icons/free-social-media-12/32/RSS_social_media-128.png",\n\
+            label: "Time Remaining - (00:04:46)",\n\
+            shortLabel: "(00:04:46)",\n\
+            tooltip: "End of Shift - 09:00AM to 05:00PM",\n\
+            backgroundColor: "#FFFFFF",\n\
+            labelColor: "#000000" }, succeeded, failed)';
+          commandHelp = 'Update (or create) a customizable view in the Application Menu Bar.';
+          break;
+        case 'system.closeViewInApplicationMenuBar':
+          command = 'genesys.wwe.service.system.closeViewInApplicationMenuBar("view0", succeeded, failed)';
+          commandHelp = 'Close a customizable view in the Application Menu Bar.';
+          break;
         case "system.isFrameLeading":
           command = 'genesys.wwe.service.system.isFrameLeading(succeeded, failed)';
           commandHelp = 'Check if current tab is the Leader.';
@@ -386,6 +401,8 @@
     <button onclick="showCommand('system.popupToast')">system.popupToast</button>
     <button onclick="showCommand('system.updateToast')">system.updateToast</button>
     <button onclick="showCommand('system.closeToast')">system.closeToast</button>
+    <button onclick="showCommand('system.updateViewInApplicationMenuBar')">system.updateViewInApplicationMenuBar</button>
+    <button onclick="showCommand('system.closeViewInApplicationMenuBar')">system.closeViewInApplicationMenuBar</button>
     <br>
     <button onclick="showCommand('system.isFrameLeading')">system.isFrameLeading</button>
     <button onclick="showCommand('system.isFrameFollowing')">system.isFrameFollowing</button>
