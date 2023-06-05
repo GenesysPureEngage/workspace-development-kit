@@ -339,6 +339,21 @@
           command = 'genesys.wwe.service.system.closeDialog("wweCustomDialog1", succeeded, failed)';
           commandHelp = 'Close a dialog.';
           break;
+        case 'system.updateViewInApplicationMenuBar':
+          command = 'genesys.wwe.service.system.updateViewInApplicationMenuBar({\n\
+            name: "view0",\n\
+            iconUrl: "https://cdn1.iconfinder.com/data/icons/free-social-media-12/32/RSS_social_media-128.png",\n\
+            label: "Time Remaining - (00:04:46)",\n\
+            shortLabel: "(00:04:46)",\n\
+            tooltip: "End of Shift - 09:00AM to 05:00PM",\n\
+            backgroundColor: "#FFFFFF",\n\
+            labelColor: "#000000" }, succeeded, failed)';
+          commandHelp = 'Update (or create) a customizable view in the Application Menu Bar.';
+          break;
+        case 'system.closeViewInApplicationMenuBar':
+          command = 'genesys.wwe.service.system.closeViewInApplicationMenuBar("view0", succeeded, failed)';
+          commandHelp = 'Close a customizable view in the Application Menu Bar.';
+          break;
         case 'system.amIVisible':
           command = 'setTimeout(function(){ genesys.wwe.service.system.amIVisible(succeeded, failed); }, 3000)';
           commandHelp = 'Get the current visibility state of the frame.';
@@ -495,6 +510,8 @@
     <button onclick="showCommand('system.closeToast')">system.closeToast</button>
     <button onclick="showCommand('system.openDialog')">system.openDialog</button>
     <button onclick="showCommand('system.closeDialog')">system.closeDialog</button>
+    <button onclick="showCommand('system.updateViewInApplicationMenuBar')">system.updateViewInApplicationMenuBar</button>
+    <button onclick="showCommand('system.closeViewInApplicationMenuBar')">system.closeViewInApplicationMenuBar</button>
     <button onclick="showCommand('system.amIVisible')">system.amIVisible</button>
     <br>
     <button onclick="showCommand('system.isFrameLeading')">system.isFrameLeading</button>

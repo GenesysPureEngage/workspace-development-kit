@@ -571,6 +571,107 @@ if (!window.genesys.wwe.service) {
     }
   };
 
+  service.outbound = {
+    getCampaigns: function (successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.getCampaigns'
+      }, successCallback, failedCallback);
+    },
+    getPreviewRecord: function (campaignName, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.getPreviewRecord',
+        parameters: [campaignName]
+      }, successCallback, failedCallback);
+    },
+    getChainedRecords: function(interactionId, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.getChainedRecords',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
+    },
+    getRecordFields: function(interactionId, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.getRecordFields',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
+    },
+    updateRecordFields: function(interactionId, recordData, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.updateRecordFields',
+        parameters: [interactionId, recordData]
+      }, successCallback, failedCallback);
+    },
+    callPreviewRecord: function (interactionId, recordHandle, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.callPreviewRecord',
+        parameters: [interactionId, recordHandle]
+      }, successCallback, failedCallback);
+    },
+    rejectPreviewRecord: function (interactionId, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.rejectPreviewRecord',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
+    },
+    cancelPreviewRecord: function (interactionId, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.cancelPreviewRecord',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
+    },
+    startDirectPushPreview: function (successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.startDirectPushPreview'
+      }, successCallback, failedCallback);
+    },
+    stopDirectPushPreview: function (successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.stopDirectPushPreview'
+      }, successCallback, failedCallback);
+    },
+    rescheduleRecord: function (interactionId, recordHandle, rescheduleDate, callbackType, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.rescheduleRecord',
+        parameters: [interactionId, recordHandle, rescheduleDate, callbackType]
+        }, successCallback, failedCallback);
+    },
+    cancelReschedule: function (interactionId, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.cancelReschedule',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
+    },
+    getListOfCallResults: function(successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.getListOfCallResults'
+      }, successCallback, failedCallback);
+    },
+    setCallResult: function(interactionId, callResult, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.setCallResult',
+        parameters: [interactionId, callResult]
+      }, successCallback, failedCallback);
+    },
+    getCallResult : function(interactionId, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.getCallResult',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
+    },
+    setDoNotCall: function(interactionId, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.setDoNotCall',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
+    },
+    removeDoNotCall: function(interactionId, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'outbound.removeDoNotCall',
+        parameters: [interactionId]
+      }, successCallback, failedCallback);
+    }
+  };
+
   service.system = {
     getAllowedServices: function (successCallback, failedCallback) {
       service.sendMessage({
@@ -610,6 +711,18 @@ if (!window.genesys.wwe.service) {
       service.sendMessage({
         request: 'system.closeDialog',
         parameters: [dialogId]
+      }, successCallback, failedCallback);
+    },
+    updateViewInApplicationMenuBar: function (parameters, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'system.updateViewInApplicationMenuBar',
+        parameters: [parameters]
+      }, successCallback, failedCallback);
+    },
+    closeViewInApplicationMenuBar: function (name, successCallback, failedCallback) {
+      service.sendMessage({
+        request: 'system.closeViewInApplicationMenuBar',
+        parameters: [name]
       }, successCallback, failedCallback);
     },
     amIVisible: function (successCallback, failedCallback) {
